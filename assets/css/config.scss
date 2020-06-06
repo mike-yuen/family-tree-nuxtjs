@@ -16,34 +16,3 @@
   font-weight: bold;
   font-style: normal;
 }
-
-.agile__dots {
-  position: absolute;
-  right: 1.25rem;
-  bottom: 1rem;
-  @media (max-width: 768px) {
-    display: none;
-  }
-}
-.agile__dot {
-  margin: 0;
-  margin-right: 0.8rem;
-  button {
-    display: block;
-    width: 0.75rem;
-    height: 0.75rem;
-    font-size: 0;
-    line-height: 0;
-    margin: 0;
-    padding: 0;
-    background-color: transparent;
-    border: 1px solid #fff;
-    border-radius: 100%;
-    cursor: pointer;
-    transition-duration: 0.3s;
-  }
-}
-.agile__dot--current button,
-.agile__dot:hover button {
-  background-color: #fff;
-}

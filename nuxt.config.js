@@ -1,5 +1,3 @@
-import { join } from 'path'
-
 export default {
   mode: 'universal',
   /*
@@ -25,9 +23,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [
-    '~assets/css/tailwind.scss'
-  ],
+  css: ['~assets/css/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -37,9 +33,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/eslint-module'
   ],
   /*
    ** Nuxt.js modules
@@ -59,10 +53,14 @@ export default {
   build: {
     postcss: {
       plugins: {
-        tailwindcss: join(__dirname, 'tailwind.config.js'),
-        autoprefixer: require("autoprefixer"),
+        autoprefixer: require('autoprefixer')
       }
-    },
-    extend(config, ctx) { }
+    }
+    // extend(config, { isClient, loaders: { vue } }) {
+    //   // Extend only webpack config for client-bundle
+    //   if (isClient) {
+    //     vue.transformAssetUrls.img = ['src']
+    //   }
+    // }
   }
 }
