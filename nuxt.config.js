@@ -40,13 +40,17 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'bootstrap-vue/nuxt'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+  bootstrapVue: {
+    icons: true // Install the IconsPlugin (in addition to BootStrapVue plugin)
+  },
   /*
    ** Build configuration
    */
@@ -56,11 +60,5 @@ export default {
         autoprefixer: require('autoprefixer')
       }
     }
-    // extend(config, { isClient, loaders: { vue } }) {
-    //   // Extend only webpack config for client-bundle
-    //   if (isClient) {
-    //     vue.transformAssetUrls.img = ['src']
-    //   }
-    // }
   }
 }

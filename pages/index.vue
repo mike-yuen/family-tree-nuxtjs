@@ -13,20 +13,55 @@
           <PersonCard />
           <PersonCard gender="female" />
           <PersonCard gender="unknown" />
+          <PersonTree :tree-data="tree" @nodeClick="logClick"></PersonTree>
         </div>
       </div>
     </section>
+    <ActionModal id="edit-modal" />
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import * as d3 from 'd3'
 // component
+import ActionModal from '@/components/ActionModal/ActionModal'
 import PersonCard from '@/components/PersonCard/PersonCard'
+import PersonTree from '@/components/PersonTree/PersonTree'
 
 export default {
   components: {
-    PersonCard
+    ActionModal,
+    PersonCard,
+    PersonTree
+  },
+  data: () => {
+    return {
+      tree: {
+        data: [{ name: 'husband1' }, { name: 'wife1' }],
+        children: [
+          {
+            data: [{ name: 'husband2.1' }, { name: 'wife2.1' }],
+            children: [
+              {
+                data: [{ name: 'husband3.1' }, { name: 'wife3.1' }]
+              },
+              {
+                data: [{ name: 'husband3.2' }, { name: 'wife3.2' }],
+                children: [
+                  {
+                    data: [{ name: 'husband4.1' }, { name: 'wife4.1' }]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            data: [{ name: 'husband2.2' }, { name: 'wife2.2' }]
+          }
+        ]
+      }
+    }
   },
   computed: {
     pedigree() {
@@ -92,6 +127,19 @@ export default {
         'transform',
         `translate(${d3.event.transform.x}px, ${d3.event.transform.y}px) scale(${d3.event.transform.k})`
       )
+    },
+    logClick(node, child) {
+      console.log('Clicked: ', node, child)
+      this.$bvModal.show('edit-modal')
+      if (node.children) {
+        node.children.push({
+          data: [{ name: `add-from-${node.data[0].name}` }]
+        })
+      } else {
+        Vue.set(node, 'children', [
+          { data: [{ name: `new-from-${node.data[0].name}` }] }
+        ])
+      }
     }
   }
 }
