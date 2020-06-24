@@ -1,4 +1,3 @@
-@use "sass:map";
 // Custom Bootstrap variable overrides go first
 $grid-breakpoints: (
   xs: 0,
@@ -8,14 +7,6 @@ $grid-breakpoints: (
   xl: 1300px
 );
 $enable-rounded: false;
-
-@media (min-width: 992px) {
-  .modal-dialog {
-    &.modal-mdx {
-      max-width: 560px;
-    }
-  }
-}
 
 // Then include the following
 @import 'bootstrap/scss/bootstrap.scss';

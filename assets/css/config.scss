@@ -1,18 +1,30 @@
 @font-face {
-  font-family: "Ciutadella";
-  src: url("../fonts/Ciutadella.eot") format("embedded-opentype"),
-    url("../fonts/Ciutadella.woff2") format("woff2"),
-    url("../fonts/Ciutadella.woff") format("woff"),
-    url("../fonts/Ciutadella.ttf") format("truetype");
+  font-family: 'Ciutadella';
+  src: url('../fonts/Ciutadella.eot') format('embedded-opentype'),
+    url('../fonts/Ciutadella.woff2') format('woff2'),
+    url('../fonts/Ciutadella.woff') format('woff'),
+    url('../fonts/Ciutadella.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "Ciutadella";
-  src: url("../fonts/CiutadellaBold.eot") format("embedded-opentype"),
-    url("../fonts/CiutadellaBold.woff2") format("woff2"),
-    url("../fonts/CiutadellaBold.woff") format("woff"),
-    url("../fonts/CiutadellaBold.ttf") format("truetype");
+  font-family: 'Ciutadella';
+  src: url('../fonts/CiutadellaBold.eot') format('embedded-opentype'),
+    url('../fonts/CiutadellaBold.woff2') format('woff2'),
+    url('../fonts/CiutadellaBold.woff') format('woff'),
+    url('../fonts/CiutadellaBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+}
+
+.modal-backdrop {
+  opacity: 0.75;
+}
+
+@media (min-width: 992px) {
+  .modal-dialog {
+    &.modal-mdx {
+      max-width: 560px;
+    }
+  }
 }

@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   &:after {
-    content: '';
+    content: none;
     position: absolute;
     top: 76px;
     left: 106px;
@@ -12,6 +12,16 @@
     border-radius: 50%;
     border: 1px solid #ffffff;
     background: #2e2c25;
+  }
+  &--has-spouse {
+    .person-card {
+      &:after {
+        content: '';
+      }
+    }
+    &:after {
+      content: '';
+    }
   }
 }
 .person-card {
@@ -49,7 +59,7 @@
     border-top: 1px solid #2e2c25;
   }
   &:after {
-    content: '';
+    content: none;
     position: absolute;
     top: 59px;
     left: -10px;
@@ -169,6 +179,12 @@
       display: none;
     }
   }
+  &--level-1,
+  &--spouse {
+    &:before {
+      content: none;
+    }
+  }
 }
 
 .node-tree {
@@ -188,6 +204,11 @@
   &:first-child {
     &::before {
       left: calc(50% - 55px);
+    }
+  }
+  &:last-child {
+    &::before {
+      width: calc(50% - 55px);
     }
   }
   &__branch {

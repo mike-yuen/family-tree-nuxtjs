@@ -1,7 +1,16 @@
 <template>
   <div class="container">
     <section class="pedigree-view">
-      <button @click="reset()">Reset</button>
+      <b-btn
+        id="recenter"
+        size="sm"
+        variant="outline-secondary"
+        class="pedigree-view__reset"
+        title="Re-center"
+        @click="reset()"
+      >
+        <i class="fa fa-location"></i>
+      </b-btn>
       <svg
         id="svgPedigree"
         height="100%"
@@ -17,47 +26,91 @@
         </div>
       </div>
     </section>
-    <ActionModal id="edit-modal" />
+    <ActionModal id="action-modal" :data="dataPerson" />
+    <FloatButton />
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import * as d3 from 'd3'
 // component
 import ActionModal from '@/components/ActionModal/ActionModal'
 import PersonCard from '@/components/PersonCard/PersonCard'
 import PersonTree from '@/components/PersonTree/PersonTree'
+import FloatButton from '@/components/FloatButton/FloatButton'
 
 export default {
   components: {
     ActionModal,
     PersonCard,
-    PersonTree
+    PersonTree,
+    FloatButton
   },
   data: () => {
     return {
+      dataPerson: {},
       tree: {
-        data: [{ name: 'husband1' }, { name: 'wife1' }],
+        id: '3a7d90d5-f050-47df-9550-59613dd57d5e',
+        name: 'Root level - husband',
+        level: 1,
+        gender: true,
+        dob: '1920-06-13T00:00:00',
+        isPassedAway: false,
+        parentId: null,
+        spouse: {
+          id: 'f321bbac-b40f-4035-9e2c-67bf768aaefe',
+          name: 'Rool level -wife',
+          level: 1,
+          gender: false,
+          dob: '1925-06-20T00:00:00',
+          isPassedAway: false,
+          parentId: null,
+          spouse: null,
+          children: []
+        },
         children: [
           {
-            data: [{ name: 'husband2.1' }, { name: 'wife2.1' }],
-            children: [
-              {
-                data: [{ name: 'husband3.1' }, { name: 'wife3.1' }]
-              },
-              {
-                data: [{ name: 'husband3.2' }, { name: 'wife3.2' }],
-                children: [
-                  {
-                    data: [{ name: 'husband4.1' }, { name: 'wife4.1' }]
-                  }
-                ]
-              }
-            ]
+            id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39c',
+            name: '1st Level _Male',
+            level: 2,
+            gender: true,
+            dob: '1945-06-01T00:00:00',
+            isPassedAway: false,
+            parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e',
+            spouse: {
+              id: 'd1147550-c100-440a-99b9-721e5eabb1d8',
+              name: '1st Level - Others - Female',
+              level: 2,
+              gender: false,
+              dob: '1947-07-20T00:00:00',
+              isPassedAway: false,
+              parentId: null,
+              spouse: null,
+              children: []
+            },
+            children: []
           },
           {
-            data: [{ name: 'husband2.2' }, { name: 'wife2.2' }]
+            id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39d',
+            name: '1sl Level - 02 _Female',
+            level: 2,
+            gender: false,
+            dob: '1946-06-15T00:00:00',
+            isPassedAway: false,
+            parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e',
+            spouse: null,
+            children: [
+              {
+                id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39c',
+                name: '2st Level _Male',
+                level: 3,
+                gender: true,
+                dob: '1945-06-01T00:00:00',
+                isPassedAway: false,
+                parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e'
+              }
+            ]
           }
         ]
       }
@@ -78,7 +131,6 @@ export default {
     }
   },
   mounted() {
-    console.log('aaaaaaaa')
     this.pedigreContainer
       .attr('cx', (x) => x)
       .attr('cy', (y) => y)
@@ -101,7 +153,6 @@ export default {
     },
     clicked(x, y) {
       d3.event.stopPropagation()
-      console.log(this.zoom.transform)
       if (
         Number.isNaN(d3.event.transform.k) ||
         Number.isNaN(d3.event.transform.x) ||
@@ -128,18 +179,20 @@ export default {
         `translate(${d3.event.transform.x}px, ${d3.event.transform.y}px) scale(${d3.event.transform.k})`
       )
     },
-    logClick(node, child) {
-      console.log('Clicked: ', node, child)
-      this.$bvModal.show('edit-modal')
-      if (node.children) {
-        node.children.push({
-          data: [{ name: `add-from-${node.data[0].name}` }]
-        })
-      } else {
-        Vue.set(node, 'children', [
-          { data: [{ name: `new-from-${node.data[0].name}` }] }
-        ])
-      }
+    async logClick(node) {
+      this.dataPerson = node
+      const { data } = await this.$axios.get('https://reqres.in/api/users')
+      console.log('data', data)
+      this.$bvModal.show('action-modal')
+      // if (node.children) {
+      //   node.children.push({
+      //     data: [{ name: `add-from-${node.data[0].name}` }]
+      //   })
+      // } else {
+      //   Vue.set(node, 'children', [
+      //     { data: [{ name: `new-from-${node.data[0].name}` }] }
+      //   ])
+      // }
     }
   }
 }

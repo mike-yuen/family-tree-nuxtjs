@@ -16,7 +16,8 @@
     "@nuxtjs/axios": "^5.3.6",
     "bootstrap-vue": "^2.15.0",
     "d3": "^5.16.0",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "vue-moment": "^4.1.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.0",

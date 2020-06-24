@@ -1,10 +1,55 @@
 <template>
   <div class="update-modal-variant">
-    <form class="update-modal-variant__form">
+    <div v-if="stateValue === 'add'" class="update-modal-variant__content">
+      <div class="update-modal-variant__header">
+        <h3>Choose a relative to add</h3>
+      </div>
+      <ul class="update-modal-variant__list">
+        <li @click="onChangeState('edit')">
+          <a>
+            <div class="update-modal-variant__plus-icon">
+              <i class="faf fa-plus"></i>
+            </div>
+            <div class="update-modal-variant__relative">
+              <h2>
+                <strong>Spouse</strong>
+              </h2>
+            </div>
+          </a>
+        </li>
+        <li @click="onChangeState('edit')">
+          <a>
+            <div class="update-modal-variant__plus-icon">
+              <i class="faf fa-plus"></i>
+            </div>
+            <div class="update-modal-variant__relative">
+              <h2>
+                <strong>Sibling</strong>
+              </h2>
+            </div>
+          </a>
+        </li>
+        <li @click="onChangeState('edit')">
+          <a>
+            <div class="update-modal-variant__plus-icon">
+              <i class="faf fa-plus"></i>
+            </div>
+            <div class="update-modal-variant__relative">
+              <h2>
+                <strong>Child</strong>
+              </h2>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <form v-if="stateValue === 'edit'" class="update-modal-variant__form">
       <div class="update-modal-variant__content">
         <div class="update-modal-variant__header">
           <h3>Edit this relation</h3>
-          <a href="#">Delete <i class="faf fa-trash"></i></a>
+          <a @click="onChangeState('delete')">
+            Delete <i class="faf fa-trash"></i>
+          </a>
         </div>
         <div class="update-modal-variant__group">
           <div
@@ -21,8 +66,8 @@
               <label for="firstname"> First and middle names </label>
               <b-form-input
                 id="firstname"
-                size="sm"
                 v-model="firstname"
+                size="sm"
                 placeholder="Enter your first name"
               ></b-form-input>
             </div>
@@ -30,8 +75,8 @@
               <label for="surname">Last name</label>
               <b-form-input
                 id="surname"
-                size="sm"
                 v-model="surname"
+                size="sm"
                 placeholder="Enter your last name"
               ></b-form-input>
             </div>
@@ -78,16 +123,16 @@
               <label for="birth-date">Date</label>
               <b-form-input
                 id="birth-date"
-                size="sm"
                 v-model="birthDate"
+                size="sm"
               ></b-form-input>
             </div>
             <div class="control col">
               <label for="birth-place">Place</label>
               <b-form-input
                 id="birth-place"
-                size="sm"
                 v-model="birthPlace"
+                size="sm"
                 placeholder="Town, state, etc."
               ></b-form-input>
             </div>
@@ -95,17 +140,14 @@
               <label for="birth-address">Address</label>
               <b-form-input
                 id="birth-address"
-                size="sm"
                 v-model="birthAddress"
+                size="sm"
                 placeholder="Street or building"
               ></b-form-input>
             </div>
           </div>
         </div>
-        <div
-          class="update-modal-variant__group"
-          ng-class="{'control-group--disabled': personEdit.IsLiving != false}"
-        >
+        <div class="update-modal-variant__group">
           <div
             class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
           >
@@ -116,71 +158,41 @@
               <label for="death-date">Date</label>
               <b-form-input
                 id="death-date"
-                size="sm"
                 v-model="deathDate"
-                disabled
+                size="sm"
+                :disabled="!isDeceased"
               ></b-form-input>
             </div>
             <div class="control col">
               <label for="death-place">Place</label>
               <b-form-input
                 id="death-place"
-                size="sm"
                 v-model="deathPlace"
+                size="sm"
                 placeholder="Town, state, etc."
-                disabled
+                :disabled="!isDeceased"
               ></b-form-input>
             </div>
             <div class="control col">
               <label for="death-address">Address</label>
               <b-form-input
                 id="death-address"
-                size="sm"
                 v-model="deathAddress"
+                size="sm"
                 placeholder="Street or building"
-                disabled
+                :disabled="!isDeceased"
               ></b-form-input>
             </div>
           </div>
         </div>
       </div>
-
       <div class="update-modal-variant__footer">
-        <div class="form-actions ng-binding">
-          <button
-            type="submit"
-            class="btn btn-radius btn-primary btn-fullblue btn-large ng-binding"
-            ng-disabled="data.buttonDisabled"
-            data-tr="tree_quick_edit_save_button"
-            data-tid="PersonQuickEdit.Submit"
-          >
-            Save changes
-          </button>
-          or
-          <a
-            href=""
-            ng-click="reset()"
-            data-tr="tree_quick_edit_cancel_button"
-            data-tid="PersonQuickEdit.Cancel"
-            translate=""
-            class="ng-scope"
-            >Cancel</a
-          >
-          <!-- ngIf: !data.relationship --><a
-            ng-hide="serverError"
-            ng-if="!data.relationship"
-            class="nodal-modal__info ng-binding ng-scope"
-            href=""
-            ng-click="profile($event, actions.fullProfile)"
-            data-tr="tree_quick_edit_full_profile_button"
-            data-tid="PersonQuickEdit.FullEdit"
-            >Full profile
-            <i
-              data-tr="tree_quick_edit_full_profile_button"
-              class="fa fa-pencil"
-            ></i></a
-          ><!-- end ngIf: !data.relationship -->
-        </div>
+        <b-button pill variant="primary" @click="onCloseModal(id)">
+          Save Changes
+        </b-button>
+        <b-button pill variant="light" @click="onCloseModal(id)">
+          C<i class="fa fa-poo"></i>ncel
+        </b-button>
       </div>
     </form>
   </div>
@@ -189,10 +201,46 @@
 <script>
 export default {
   name: 'UpdateModalVariant',
+  props: {
+    id: {
+      type: String,
+      required: true
+    },
+    value: {}
+  },
   data() {
     return {
+      firstname: '',
+      surname: '',
       gender: 'male',
-      status: 'living'
+      status: 'living',
+      birthDate: '',
+      birthPlace: '',
+      birthAddress: '',
+      deathDate: '',
+      deathPlace: '',
+      deathAddress: ''
+    }
+  },
+  computed: {
+    stateValue: {
+      get() {
+        return this.$props.value
+      },
+      set(val) {
+        this.$emit('input', val)
+      }
+    },
+    isDeceased() {
+      return this.status === 'deceased'
+    }
+  },
+  methods: {
+    onCloseModal(id) {
+      this.$bvModal.hide(id)
+    },
+    onChangeState(action) {
+      if (action) this.stateValue = action
     }
   }
 }
@@ -213,7 +261,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #ffffff;
+    background: #fff;
     padding: 0 1rem;
     h3 {
       font-weight: bold;
@@ -227,6 +275,71 @@ export default {
       font-size: 12px;
       color: #5678a2;
       margin: 10px 0 5px;
+      cursor: pointer;
+    }
+  }
+  &__list {
+    padding: 0 1px;
+    border-top: 1px solid #c8c8c8;
+    list-style: none;
+    margin-bottom: 0;
+    li {
+      border-top: 1px solid #f3f0ec;
+      &:first-child {
+        border-top: 0;
+      }
+      & > a {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0 1rem;
+        width: 100%;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #333333;
+        text-align: left;
+        font-size: 12px;
+        line-height: 1;
+        transition: border 250ms cubic-bezier(0.645, 0.045, 0.355, 1),
+          box-shadow 250ms cubic-bezier(0.645, 0.045, 0.355, 1);
+        cursor: pointer;
+        border-radius: 4px;
+        &:hover {
+          border: 1px solid #5678a2;
+          .update-modal-variant {
+            &__plus-icon {
+              background: #5678a2;
+            }
+          }
+        }
+      }
+      .update-modal-variant {
+        &__plus-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 45px;
+          height: 45px;
+          background: #7c7c7c;
+          color: #fff;
+          text-align: center;
+          transition: background 250ms cubic-bezier(0.645, 0.045, 0.355, 1);
+          margin: 10px 10px 10px 0;
+          border-radius: 50%;
+          i {
+            font-size: 24px;
+            color: #fff;
+          }
+        }
+        &__relative {
+          font-size: 12px;
+          h2 {
+            font-size: 16px;
+            margin: 0;
+          }
+        }
+      }
     }
   }
   &__group {

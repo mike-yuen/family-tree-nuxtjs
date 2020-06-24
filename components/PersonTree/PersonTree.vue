@@ -14,11 +14,14 @@ export default {
     PersonCard
   },
   props: {
-    treeData: Object
+    treeData: {
+      type: Object,
+      default: () => {}
+    }
   },
   methods: {
-    handleClick(node, child) {
-      this.$emit('nodeClick', node, child)
+    handleClick(node) {
+      this.$emit('nodeClick', node)
     }
   }
 }
@@ -27,5 +30,10 @@ export default {
 <style lang="scss" scoped>
 .tree-list {
   padding-left: 0;
+  & > li {
+    &:before {
+      content: none;
+    }
+  }
 }
 </style>
