@@ -1,18 +1,24 @@
 export const state = () => ({
-  someValue: ''
+  treeData: {}
 })
 
 export const mutations = {
-  changeSomeValue(state, newValue) {
-    this.$hello('store mutation')
-    state.someValue = newValue
+  changeTreeData(state, newValue) {
+    state.treeData = newValue
   }
 }
 
 export const actions = {
-  setSomeValueToWhatever({ commit }) {
-    this.$hello('store action')
-    const newValue = 'whatever'
-    commit('changeSomeValue', newValue)
+  getTreeData({ commit }) {
+    console.log('action')
+    return this.$fTAxios
+      .get('/users')
+      .then((data) => {
+        commit('changeTreeData', data)
+        return data
+      })
+      .catch((err) => {
+        return err.response
+      })
   }
 }

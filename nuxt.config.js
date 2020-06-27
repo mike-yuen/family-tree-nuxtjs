@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   mode: 'universal',
   /*
@@ -24,33 +26,16 @@ export default {
    ** Global CSS
    */
   css: ['~assets/css/main.scss'],
-  /*
-   ** Plugins to load before mounting the App
-   */
-  plugins: ['~/plugins/axios.js', '~/plugins/vue-moment.js'],
-  /*
-   ** Nuxt.js dev-modules
-   */
-  buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+  plugins: [
+    { src: '~/plugins/axios.js', ssr: false },
+    '~/plugins/vue-moment.js'
   ],
-  /*
-   ** Nuxt.js modules
-   */
-  modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-    'bootstrap-vue/nuxt'
-  ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
+  buildModules: ['@nuxtjs/eslint-module'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/dotenv', 'bootstrap-vue/nuxt'],
   bootstrapVue: {
-    icons: true // Install the IconsPlugin (in addition to BootStrapVue plugin)
+    icons: true // Install the IconsPlugin
   },
+  axios: {},
   /*
    ** Build configuration
    */

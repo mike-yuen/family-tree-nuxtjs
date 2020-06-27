@@ -19,9 +19,6 @@
       ></svg>
       <div id="pedigree" class="pedigree-view__content">
         <div id="pedigree-container" class="pedigree-view__container">
-          <PersonCard />
-          <PersonCard gender="female" />
-          <PersonCard gender="unknown" />
           <PersonTree :tree-data="tree" @nodeClick="logClick"></PersonTree>
         </div>
       </div>
@@ -32,18 +29,16 @@
 </template>
 
 <script>
-// import Vue from 'vue'
+import { mapActions } from 'vuex'
 import * as d3 from 'd3'
 // component
 import ActionModal from '@/components/ActionModal/ActionModal'
-import PersonCard from '@/components/PersonCard/PersonCard'
 import PersonTree from '@/components/PersonTree/PersonTree'
 import FloatButton from '@/components/FloatButton/FloatButton'
 
 export default {
   components: {
     ActionModal,
-    PersonCard,
     PersonTree,
     FloatButton
   },
@@ -138,8 +133,10 @@ export default {
     this.pedigree.call(this.zoom)
   },
   methods: {
+    ...mapActions({
+      getTreeData: 'getTreeData'
+    }),
     reset() {
-      // d3.event.stopPropagation()
       this.pedigree
         .transition()
         .duration(750)
@@ -181,7 +178,7 @@ export default {
     },
     async logClick(node) {
       this.dataPerson = node
-      const { data } = await this.$axios.get('https://reqres.in/api/users')
+      const { data } = await this.getTreeData()
       console.log('data', data)
       this.$bvModal.show('action-modal')
       // if (node.children) {
