@@ -1,0 +1,40 @@
+{
+  "name": "nuxt-travel",
+  "version": "1.0.0",
+  "description": "My legendary Nuxt.js project",
+  "author": "minhnguyen1505",
+  "private": true,
+  "scripts": {
+    "dev": "npm run lint && nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --fix --ignore-path .gitignore .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "bootstrap-vue": "^2.15.0",
+    "d3": "^5.16.0",
+    "nuxt": "^2.0.0",
+    "vee-validate": "^3.3.6",
+    "vue-moment": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.1.0",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^24.1.0",
+    "node-sass": "^4.13.1",
+    "prettier": "^1.19.1",
+    "sass-loader": "^8.0.2",
+    "vue-jest": "^4.0.0-0"
+  }
+}

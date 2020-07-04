@@ -1,0 +1,47 @@
+.pedigree-view {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: 0 0;
+  &__reset {
+    position: fixed;
+    top: 85px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    border-radius: 10px;
+    z-index: 1;
+  }
+  &__svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #f3f0ec;
+    background-attachment: fixed;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  &__content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: 0 0;
+    cursor: move;
+  }
+  &__container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+}
