@@ -12,7 +12,7 @@ export const actions = {
   getTreeData({ commit }) {
     console.log('action')
     return this.$fTAxios
-      .get('api/Individual')
+      .get('/api/Individual')
       .then((data) => {
         commit('changeTreeData', data)
         return data
