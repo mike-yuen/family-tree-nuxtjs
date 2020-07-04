@@ -11,10 +11,15 @@
       </div>
     </div>
     <div class="delete-modal-variant__footer">
-      <b-button pill variant="primary" @click="onCloseModal(id)">
+      <b-button pill variant="info" class="px-4" @click="onCloseModal(id)">
         Delete
       </b-button>
-      <b-button pill variant="light" @click="onCloseModal(id)">
+      <b-button
+        pill
+        variant="outline-info"
+        class="ml-2 px-4"
+        @click="onCloseModal(id)"
+      >
         C<i class="fa fa-poo"></i>ncel
       </b-button>
     </div>

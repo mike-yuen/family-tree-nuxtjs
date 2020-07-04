@@ -20,9 +20,11 @@
           <b-btn pill size="sm" variant="link" class="mr-2">
             <i class="fa fa-comments"></i>
           </b-btn>
-          <b-btn pill variant="outline-secondary" class="px-4 mr-2">
-            <i class="fa fa-sign-in mr-2"></i> Login
-          </b-btn>
+          <router-link to="/login">
+            <b-btn pill variant="info" class="px-4 mr-2">
+              <i class="fa fa-sign-in mr-2"></i> Login
+            </b-btn>
+          </router-link>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

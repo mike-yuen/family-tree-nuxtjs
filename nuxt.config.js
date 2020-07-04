@@ -28,6 +28,7 @@ export default {
   css: ['~assets/css/main.scss'],
   plugins: [
     { src: '~/plugins/axios.js', ssr: false },
+    { src: '~/plugins/vee-validation.js', ssr: false },
     '~/plugins/vue-moment.js'
   ],
   buildModules: ['@nuxtjs/eslint-module'],

@@ -187,10 +187,15 @@
         </div>
       </div>
       <div class="update-modal-variant__footer">
-        <b-button pill variant="primary" @click="onCloseModal(id)">
+        <b-button pill variant="info" class="px-4" @click="onCloseModal(id)">
           Save Changes
         </b-button>
-        <b-button pill variant="light" @click="onCloseModal(id)">
+        <b-button
+          pill
+          variant="outline-info"
+          class="ml-2 px-4"
+          @click="onCloseModal(id)"
+        >
           C<i class="fa fa-poo"></i>ncel
         </b-button>
       </div>
@@ -370,6 +375,7 @@ export default {
   &__controls {
     display: flex;
     margin: 0 20px;
+    width: 100%;
     .control {
       color: #242048;
       margin-right: 10px;

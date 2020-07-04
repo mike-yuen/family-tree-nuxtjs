@@ -1,0 +1,26 @@
+.login-page {
+  width: 100%;
+  background: #f3f0ec;
+  overflow: hidden;
+  min-height: 100vh;
+  padding-top: 85px;
+  &__title {
+    color: #60a38e;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.25;
+    padding-bottom: 25px;
+  }
+  &__section {
+    background: #fff;
+    margin: 0px;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  &__section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}

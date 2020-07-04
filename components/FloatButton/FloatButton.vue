@@ -25,7 +25,7 @@ export default {
   z-index: 2;
   padding: 12px 20px;
   font-size: 16px;
-  background-color: #242048;
+  background-color: #077f92;
   color: #fff;
   border-radius: 50px;
   font-weight: 600;
