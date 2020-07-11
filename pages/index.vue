@@ -176,10 +176,15 @@ export default {
         `translate(${d3.event.transform.x}px, ${d3.event.transform.y}px) scale(${d3.event.transform.k})`
       )
     },
-    async logClick(node) {
+    logClick(node) {
       this.dataPerson = node
-      const { data } = await this.getTreeData()
-      console.log('data', data)
+      this.getTreeData()
+        .then((data) => {
+          console.log('data', data)
+        })
+        .catch((err) => {
+          console.log('err index', err)
+        })
       this.$bvModal.show('action-modal')
       // if (node.children) {
       //   node.children.push({

@@ -14,11 +14,13 @@ export const actions = {
     return this.$fTAxios
       .get('/api/Individual')
       .then((data) => {
+        console.log('data', data)
         commit('changeTreeData', data)
         return data
       })
       .catch((err) => {
-        return err.response
+        console.log('err', err)
+        return err
       })
   }
 }
