@@ -26,6 +26,9 @@ export default {
    ** Global CSS
    */
   css: ['~assets/css/main.scss'],
+  env: {
+    VUE_APP_BASE_API_URL: process.env.VUE_APP_BASE_API_URL
+  },
   plugins: [
     { src: '~/plugins/axios.js', ssr: false },
     { src: '~/plugins/vee-validation.js', ssr: false },

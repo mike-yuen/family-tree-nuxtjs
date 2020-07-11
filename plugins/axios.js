@@ -9,10 +9,7 @@ export default function({ $axios, redirect }, inject) {
     console.log('Making request to ' + config.url)
   })
   fTAxios.onError((error) => {
-    const code = parseInt(error.response && error.response.status)
-    if (code === 400) {
-      redirect('/400')
-    }
+    return error.response
   })
   inject('fTAxios', fTAxios)
 }
