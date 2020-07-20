@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="delete-modal-variant__footer">
-      <b-button pill variant="info" class="px-4" @click="onCloseModal(id)">
+      <b-button pill variant="info" class="px-4" @click="deletePerson()">
         Delete
       </b-button>
       <b-button
@@ -27,17 +27,29 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'DeleteModalVariant',
   props: {
     id: {
       type: String,
       required: true
-    }
+    },
+    personData: {}
   },
   methods: {
+    ...mapActions({
+      deletePersonData: 'deletePersonData'
+    }),
     onCloseModal(id) {
       this.$bvModal.hide(id)
+    },
+    deletePerson() {
+      this.deletePersonData(this.personData.id).then(() => {
+        console.log('delete')
+        this.onCloseModal(this.id)
+      })
     }
   }
 }

@@ -18,8 +18,8 @@
             />
             <div class="edit-modal-header__scope__body">
               <h2>
-                <span>{{ data.name }}</span>
-                <span>Bell</span>
+                <span>{{ data.firstName }}</span>
+                <span>{{ data.lastName }}</span>
               </h2>
               <small>{{ data.dob | moment('YYYY') }}-Living</small>
             </div>
@@ -32,7 +32,11 @@
       </div>
     </template>
     <div class="edit-modal-body">
-      <DeleteModalVariant v-if="isCurrentState(['delete'])" :id="id" />
+      <DeleteModalVariant
+        v-if="isCurrentState(['delete'])"
+        :id="id"
+        :person-data="data"
+      />
       <InfoModalVariant
         v-if="isCurrentState(['info'])"
         :id="id"
@@ -43,6 +47,7 @@
         v-if="isCurrentState(['add', 'edit'])"
         :id="id"
         v-model="actionState"
+        :person-data="data"
       />
     </div>
   </b-modal>

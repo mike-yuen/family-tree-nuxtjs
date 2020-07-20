@@ -30,7 +30,7 @@ export default {
     VUE_APP_BASE_API_URL: process.env.VUE_APP_BASE_API_URL
   },
   plugins: [
-    { src: '~/plugins/axios.js', ssr: false },
+    { src: '~/plugins/axios.js' },
     { src: '~/plugins/vee-validation.js', ssr: false },
     '~/plugins/vue-moment.js'
   ],

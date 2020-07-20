@@ -45,70 +45,7 @@ export default {
   data: () => {
     return {
       dataPerson: {},
-      tree: {
-        id: '3a7d90d5-f050-47df-9550-59613dd57d5e',
-        name: 'Root level - husband',
-        level: 1,
-        gender: true,
-        dob: '1920-06-13T00:00:00',
-        isPassedAway: false,
-        parentId: null,
-        spouse: {
-          id: 'f321bbac-b40f-4035-9e2c-67bf768aaefe',
-          name: 'Rool level -wife',
-          level: 1,
-          gender: false,
-          dob: '1925-06-20T00:00:00',
-          isPassedAway: false,
-          parentId: null,
-          spouse: null,
-          children: []
-        },
-        children: [
-          {
-            id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39c',
-            name: '1st Level _Male',
-            level: 2,
-            gender: true,
-            dob: '1945-06-01T00:00:00',
-            isPassedAway: false,
-            parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e',
-            spouse: {
-              id: 'd1147550-c100-440a-99b9-721e5eabb1d8',
-              name: '1st Level - Others - Female',
-              level: 2,
-              gender: false,
-              dob: '1947-07-20T00:00:00',
-              isPassedAway: false,
-              parentId: null,
-              spouse: null,
-              children: []
-            },
-            children: []
-          },
-          {
-            id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39d',
-            name: '1sl Level - 02 _Female',
-            level: 2,
-            gender: false,
-            dob: '1946-06-15T00:00:00',
-            isPassedAway: false,
-            parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e',
-            spouse: null,
-            children: [
-              {
-                id: 'ab150efa-0f3b-41f1-b64f-cf2c4444b39c',
-                name: '2st Level _Male',
-                level: 3,
-                gender: true,
-                dob: '1945-06-01T00:00:00',
-                isPassedAway: false,
-                parentId: '3a7d90d5-f050-47df-9550-59613dd57d5e'
-              }
-            ]
-          }
-        ]
-      }
+      tree: {}
     }
   },
   computed: {
@@ -134,7 +71,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      getTreeData: 'getTreeData'
+      getTreeData: 'getTreeData',
+      getPersonData: 'getPersonData'
     }),
     reset() {
       this.pedigree
@@ -177,14 +115,12 @@ export default {
       )
     },
     logClick(node) {
-      this.dataPerson = node
-      this.getTreeData()
-        .then((data) => {
-          console.log('data', data)
-        })
-        .catch((err) => {
-          console.log('err index', err)
-        })
+      this.getPersonData(node.id).then((response) => {
+        if (response.data) {
+          this.dataPerson = response.data
+          console.log('___________node', response.data)
+        }
+      })
       this.$bvModal.show('action-modal')
       // if (node.children) {
       //   node.children.push({
@@ -196,6 +132,17 @@ export default {
       //   ])
       // }
     }
+  },
+  created() {
+    this.getTreeData()
+      .then((response) => {
+        if (response.data) {
+          this.tree = response.data
+        }
+      })
+      .catch((err) => {
+        console.log('err getTreeData', err)
+      })
   }
 }
 </script>

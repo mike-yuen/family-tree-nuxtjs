@@ -179,7 +179,7 @@
       display: none;
     }
   }
-  &--level-1,
+  &--level-0,
   &--spouse {
     &:before {
       content: none;
@@ -203,12 +203,13 @@
   }
   &:first-child {
     &::before {
-      left: calc(50% - 55px);
+      left: 50%;
+      width: 50%
     }
   }
   &:last-child {
     &::before {
-      width: calc(50% - 55px);
+      width: 50%;
     }
   }
   &__branch {

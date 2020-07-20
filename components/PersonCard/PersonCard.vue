@@ -15,9 +15,9 @@
         </span>
         <div class="person-card__body">
           <h2 class="person-card__name">
-            <span class="person-card__lastname">{{ node.name }}</span>
+            <span class="person-card__lastname">{{ node.lastName }}</span>
             <strong class="person-card__firstname">
-              {{ node.name }}
+              {{ node.firstName }}
             </strong>
           </h2>
           <small class="person-card__dates"
@@ -40,9 +40,11 @@
         </span>
         <div class="person-card__body">
           <h2 class="person-card__name">
-            <span class="person-card__lastname">{{ node.spouse.name }}</span>
+            <span class="person-card__lastname">
+              {{ node.spouse.lastName }}
+            </span>
             <strong class="person-card__firstname">
-              {{ node.spouse.name }}
+              {{ node.spouse.firstName }}
             </strong>
           </h2>
           <small class="person-card__dates"
