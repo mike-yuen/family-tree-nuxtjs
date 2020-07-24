@@ -5,7 +5,7 @@
         <h3>Choose a relative to add</h3>
       </div>
       <ul class="update-modal-variant__list">
-        <li @click="onChangeState('edit', 'SPOUSE')">
+        <li v-if="!dataForUI.spouse" @click="onChangeState('edit', 'SPOUSE')">
           <a>
             <div class="update-modal-variant__plus-icon">
               <i class="faf fa-plus"></i>
@@ -17,7 +17,10 @@
             </div>
           </a>
         </li>
-        <li @click="onChangeState('edit', 'SIBLING')">
+        <li
+          v-if="dataForApi.level > 0"
+          @click="onChangeState('edit', 'SIBLING')"
+        >
           <a>
             <div class="update-modal-variant__plus-icon">
               <i class="faf fa-plus"></i>
@@ -241,6 +244,10 @@ export default {
   },
   data() {
     return {
+      dataForUI: {
+        spouse: null,
+        children: null
+      },
       dataForApi: {
         id: '',
         level: 0,
@@ -292,18 +299,29 @@ export default {
       this.$bvModal.hide(id)
     },
     handleAddPerson() {
-      console.log('___________ this.dataForApi', this.dataForApi)
-      if (this.typeRelationship === 'CHILD')
-        this.dataForApi.parentId = this.dataForApi.id
+      switch (this.typeRelationship) {
+        case 'SPOUSE':
+          this.internalPersonData.code = 'SPOUSE'
+          this.internalPersonData.level = this.dataForApi.level
+          break
+        case 'SIBLING':
+          this.internalPersonData.code = 'SIBLING'
+          this.internalPersonData.level = this.dataForApi.level
+          break
+        case 'CHILD':
+          this.internalPersonData.code = 'CHILD'
+          this.internalPersonData.level = this.dataForApi.level + 1
+          this.dataForApi.parentId = this.dataForApi.id
+          break
+      }
       const data = Object.assign({}, this.dataForApi)
       this.$set(data, 'relationshipInput', this.internalPersonData)
       console.log('___________coolData', data)
-      this.addPersonData(data).then(() => {
-        console.log('Add successful.')
+      this.addPersonData(data).then((response) => {
+        console.log('Add successful...', response)
       })
     },
     onSaveModal() {
-      console.log('____________this.internal', this.internalPersonData)
       this.handleAddPerson()
     },
     onChangeState(action, typeRelationship = '') {
@@ -313,13 +331,15 @@ export default {
         }
         this.typeRelationship = typeRelationship
         this.stateValue = action
-        console.log('_________', action, typeRelationship)
       }
     },
     setRootPersonData() {
       this.dataForApi.id = this.personData.id || ''
       this.dataForApi.level = this.personData.level || 0
       this.dataForApi.parentId = this.personData.parentId || null
+
+      this.dataForUI.spouse = this.personData.spouse || null
+      this.dataForUI.children = this.personData.children || null
     },
     setPersonDataIntoInternal() {
       this.internalPersonData.firstName = this.personData.firstName || ''
