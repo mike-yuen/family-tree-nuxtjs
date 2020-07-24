@@ -5,7 +5,7 @@
         <h3>Choose a relative to add</h3>
       </div>
       <ul class="update-modal-variant__list">
-        <li @click="onChangeState('edit')">
+        <li v-if="!dataForUI.spouse" @click="onChangeState('edit', 'SPOUSE')">
           <a>
             <div class="update-modal-variant__plus-icon">
               <i class="faf fa-plus"></i>
@@ -17,7 +17,10 @@
             </div>
           </a>
         </li>
-        <li @click="onChangeState('edit')">
+        <li
+          v-if="dataForApi.level > 0"
+          @click="onChangeState('edit', 'SIBLING')"
+        >
           <a>
             <div class="update-modal-variant__plus-icon">
               <i class="faf fa-plus"></i>
@@ -29,7 +32,7 @@
             </div>
           </a>
         </li>
-        <li @click="onChangeState('edit')">
+        <li @click="onChangeState('edit', 'CHILD')">
           <a>
             <div class="update-modal-variant__plus-icon">
               <i class="faf fa-plus"></i>
@@ -44,6 +47,7 @@
       </ul>
     </div>
     <form v-if="stateValue === 'edit'" class="update-modal-variant__form">
+      {{ personData }}
       <div class="update-modal-variant__content">
         <div class="update-modal-variant__header">
           <h3>Edit this relation</h3>
@@ -66,7 +70,7 @@
               <label for="firstname"> First and middle names </label>
               <b-form-input
                 id="firstname"
-                v-model="firstname"
+                v-model="internalPersonData.firstName"
                 size="sm"
                 placeholder="Enter your first name"
               ></b-form-input>
@@ -74,8 +78,8 @@
             <div class="control col">
               <label for="surname">Last name</label>
               <b-form-input
-                id="surname"
-                v-model="surname"
+                id="lastName"
+                v-model="internalPersonData.lastName"
                 size="sm"
                 placeholder="Enter your last name"
               ></b-form-input>
@@ -86,12 +90,20 @@
           <div class="update-modal-variant__mainlabel">Gender</div>
           <div class="update-modal-variant__controls">
             <div class="control control--radio">
-              <b-form-radio v-model="gender" name="gender" value="male">
+              <b-form-radio
+                v-model="internalPersonData.gender"
+                name="gender"
+                :value="true"
+              >
                 Male
               </b-form-radio>
             </div>
             <div class="control control--radio">
-              <b-form-radio v-model="gender" name="gender" value="female">
+              <b-form-radio
+                v-model="internalPersonData.gender"
+                name="gender"
+                :value="false"
+              >
                 Female
               </b-form-radio>
             </div>
@@ -101,12 +113,20 @@
           <div class="update-modal-variant__mainlabel">Status</div>
           <div class="update-modal-variant__controls">
             <div class="control control--radio">
-              <b-form-radio v-model="status" name="status" value="living">
+              <b-form-radio
+                v-model="internalPersonData.isLiving"
+                name="status"
+                :value="true"
+              >
                 Living
               </b-form-radio>
             </div>
             <div class="control control--radio">
-              <b-form-radio v-model="status" name="status" value="deceased">
+              <b-form-radio
+                v-model="internalPersonData.isLiving"
+                name="status"
+                :value="false"
+              >
                 Deceased
               </b-form-radio>
             </div>
@@ -123,24 +143,27 @@
               <label for="birth-date">Date</label>
               <b-form-input
                 id="birth-date"
-                v-model="birthDate"
+                v-model="internalPersonData.dob"
                 size="sm"
               ></b-form-input>
             </div>
             <div class="control col">
               <label for="birth-place">Place</label>
-              <b-form-input
-                id="birth-place"
-                v-model="birthPlace"
+              <b-form-select
+                id="birthdeath-place"
+                v-model="internalPersonData.birthLocation.countryId"
+                :options="placeOptions"
+                value-field="id"
+                text-field="name"
                 size="sm"
-                placeholder="Town, state, etc."
-              ></b-form-input>
+              >
+              </b-form-select>
             </div>
             <div class="control col">
               <label for="birth-address">Address</label>
               <b-form-input
                 id="birth-address"
-                v-model="birthAddress"
+                v-model="internalPersonData.birthLocation.address"
                 size="sm"
                 placeholder="Street or building"
               ></b-form-input>
@@ -158,26 +181,29 @@
               <label for="death-date">Date</label>
               <b-form-input
                 id="death-date"
-                v-model="deathDate"
+                v-model="internalPersonData.dod"
                 size="sm"
                 :disabled="!isDeceased"
               ></b-form-input>
             </div>
             <div class="control col">
               <label for="death-place">Place</label>
-              <b-form-input
+              <b-form-select
                 id="death-place"
-                v-model="deathPlace"
+                v-model="internalPersonData.deathLocation.countryId"
+                :options="placeOptions"
+                value-field="id"
+                text-field="name"
                 size="sm"
-                placeholder="Town, state, etc."
                 :disabled="!isDeceased"
-              ></b-form-input>
+              >
+              </b-form-select>
             </div>
             <div class="control col">
               <label for="death-address">Address</label>
               <b-form-input
                 id="death-address"
-                v-model="deathAddress"
+                v-model="internalPersonData.deathLocation.address"
                 size="sm"
                 placeholder="Street or building"
                 :disabled="!isDeceased"
@@ -187,7 +213,7 @@
         </div>
       </div>
       <div class="update-modal-variant__footer">
-        <b-button pill variant="info" class="px-4" @click="onCloseModal(id)">
+        <b-button pill variant="info" class="px-4" @click="onSaveModal(id)">
           Save Changes
         </b-button>
         <b-button
@@ -204,6 +230,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'UpdateModalVariant',
   props: {
@@ -211,20 +239,42 @@ export default {
       type: String,
       required: true
     },
-    value: {}
+    value: {},
+    personData: {}
   },
   data() {
     return {
-      firstname: '',
-      surname: '',
-      gender: 'male',
-      status: 'living',
-      birthDate: '',
-      birthPlace: '',
-      birthAddress: '',
-      deathDate: '',
-      deathPlace: '',
-      deathAddress: ''
+      dataForUI: {
+        spouse: null,
+        children: null
+      },
+      dataForApi: {
+        id: '',
+        level: 0,
+        parentId: null
+      },
+      internalPersonData: {
+        firstName: '',
+        lastName: '',
+        gender: true,
+        isLiving: true,
+        dob: null,
+        dod: null,
+        birthLocation: {
+          countryId: 0,
+          address: ''
+        },
+        deathLocation: {
+          countryId: 0,
+          address: ''
+        },
+        code: 'SIBLING',
+        level: 1
+      },
+      // internal
+      isCreated: 'false',
+      typeRelationship: '',
+      placeOptions: []
     }
   },
   computed: {
@@ -237,16 +287,95 @@ export default {
       }
     },
     isDeceased() {
-      return this.status === 'deceased'
+      return !this.internalPersonData.isLiving
     }
   },
   methods: {
+    ...mapActions({
+      getCountries: 'getCountries',
+      addPersonData: 'addPersonData'
+    }),
     onCloseModal(id) {
       this.$bvModal.hide(id)
     },
-    onChangeState(action) {
-      if (action) this.stateValue = action
+    handleAddPerson() {
+      switch (this.typeRelationship) {
+        case 'SPOUSE':
+          this.internalPersonData.code = 'SPOUSE'
+          this.internalPersonData.level = this.dataForApi.level
+          break
+        case 'SIBLING':
+          this.internalPersonData.code = 'SIBLING'
+          this.internalPersonData.level = this.dataForApi.level
+          break
+        case 'CHILD':
+          this.internalPersonData.code = 'CHILD'
+          this.internalPersonData.level = this.dataForApi.level + 1
+          this.dataForApi.parentId = this.dataForApi.id
+          break
+      }
+      const data = Object.assign({}, this.dataForApi)
+      this.$set(data, 'relationshipInput', this.internalPersonData)
+      console.log('___________coolData', data)
+      this.addPersonData(data).then((response) => {
+        console.log('Add successful...', response)
+      })
+    },
+    onSaveModal() {
+      this.handleAddPerson()
+    },
+    onChangeState(action, typeRelationship = '') {
+      if (action) {
+        if (this.stateValue === 'add') {
+          this.isCreated = true
+        }
+        this.typeRelationship = typeRelationship
+        this.stateValue = action
+      }
+    },
+    setRootPersonData() {
+      this.dataForApi.id = this.personData.id || ''
+      this.dataForApi.level = this.personData.level || 0
+      this.dataForApi.parentId = this.personData.parentId || null
+
+      this.dataForUI.spouse = this.personData.spouse || null
+      this.dataForUI.children = this.personData.children || null
+    },
+    setPersonDataIntoInternal() {
+      this.internalPersonData.firstName = this.personData.firstName || ''
+      this.internalPersonData.lastName = this.personData.lastName || ''
+      this.internalPersonData.gender = this.personData.gender || true
+      this.internalPersonData.dob = this.personData.dob || null
+      this.internalPersonData.dod = this.personData.dod || null
+      this.internalPersonData.birthLocation = this.personData.birthLocation || {
+        countryId: 0,
+        address: ''
+      }
+      this.internalPersonData.deathLocation = this.personData.deathLocation || {
+        countryId: 0,
+        address: ''
+      }
+      this.internalPersonData.deathLocation = {
+        countryId: 0,
+        address: ''
+      }
     }
+  },
+  created() {
+    if (this.stateValue === 'add') {
+      this.setRootPersonData()
+    }
+    if (this.stateValue === 'edit') {
+      this.setPersonDataIntoInternal()
+    }
+    this.getCountries().then((response) => {
+      if (response.data) {
+        this.placeOptions = [
+          { id: 0, name: 'Town, state, etc.' },
+          ...response.data
+        ]
+      }
+    })
   }
 }
 </script>
