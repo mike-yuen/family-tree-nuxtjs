@@ -47,7 +47,6 @@
       </ul>
     </div>
     <form v-if="stateValue === 'edit'" class="update-modal-variant__form">
-      {{ personData }}
       <div class="update-modal-variant__content">
         <div class="update-modal-variant__header">
           <h3>Edit this relation</h3>
@@ -141,11 +140,9 @@
           <div class="update-modal-variant__controls row">
             <div class="control col">
               <label for="birth-date">Date</label>
-              <b-form-input
-                id="birth-date"
-                v-model="internalPersonData.dob"
-                size="sm"
-              ></b-form-input>
+              <no-ssr>
+                <DatePicker id="birth-date" v-model="internalPersonData.dob" />
+              </no-ssr>
             </div>
             <div class="control col">
               <label for="birth-place">Place</label>
@@ -179,12 +176,13 @@
           <div class="update-modal-variant__controls">
             <div class="control col">
               <label for="death-date">Date</label>
-              <b-form-input
-                id="death-date"
-                v-model="internalPersonData.dod"
-                size="sm"
-                :disabled="!isDeceased"
-              ></b-form-input>
+              <no-ssr>
+                <DatePicker
+                  id="death-date"
+                  v-model="internalPersonData.dod"
+                  :disabled="!isDeceased"
+                />
+              </no-ssr>
             </div>
             <div class="control col">
               <label for="death-place">Place</label>
@@ -231,9 +229,13 @@
 
 <script>
 import { mapActions } from 'vuex'
+import DatePicker from '@/components/DatePicker/DatePicker'
 
 export default {
   name: 'UpdateModalVariant',
+  components: {
+    DatePicker
+  },
   props: {
     id: {
       type: String,

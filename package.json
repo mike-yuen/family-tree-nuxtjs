@@ -18,8 +18,9 @@
     "bootstrap-vue": "^2.15.0",
     "d3": "^5.16.0",
     "nuxt": "^2.0.0",
-    "vee-validate": "^3.3.6",
-    "vue-moment": "^4.1.0"
+    "vee-validate": "^3.3.7",
+    "vue-moment": "^4.1.0",
+    "vue2-datepicker": "^3.6.1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.0",

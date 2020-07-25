@@ -26,14 +26,16 @@
             </h3>
             <div>
               Spouse
-              <a> {{ data.spouse.name }} <strong> EQDASDQWE </strong> </a>
+              <a>
+                <strong> {{ data.spouse.fullName }} </strong>
+              </a>
             </div>
-            <div class="info-modal-variant__children">
-              Children from this marriage
+            <div v-if="data.childrenNames" class="info-modal-variant__children">
+              Children from this marriage: {{ data.childrenNames }}
             </div>
           </div>
         </li>
-        <li class="info-modal-variant__timeline-event">
+        <li v-if="data.dod" class="info-modal-variant__timeline-event">
           <div class="info-modal-variant__icon">
             <strong class="timeline-event__year"></strong>
             <i class="fa fa-tombstone"></i>
@@ -41,7 +43,7 @@
           <div class="info-modal-variant__body">
             <h3>
               <strong>Died</strong>
-              <span>12 May 2090</span>
+              <span>{{ data.dob | moment('DD MMMM YYYY') }}</span>
             </h3>
             <div class="info-modal-variant__location">
               Somewhere
@@ -182,6 +184,7 @@ export default {
   }
   &__body {
     overflow: hidden;
+    flex: 1;
     h3 {
       margin: 0;
       font-size: 18px;
@@ -190,6 +193,11 @@ export default {
         font-weight: bold;
       }
     }
+  }
+  &__children {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
   &__footer {
     position: relative;
