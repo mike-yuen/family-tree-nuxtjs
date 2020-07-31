@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   components: {},
   data: () => {
@@ -115,11 +117,19 @@ export default {
   computed: {},
   mounted() {},
   methods: {
+    ...mapActions({
+      login: 'login'
+    }),
     getValidationState({ dirty, validated, valid = null }) {
       return dirty || validated ? valid : null
     },
     onSubmit() {
-      alert(JSON.stringify(this.form))
+      this.login(this.form).then((response) => {
+        if (response && response.data) {
+          const responseData = response.data
+          localStorage.setItem('authFamilyTree', responseData.data)
+        }
+      })
     },
     onReset() {
       this.form = {

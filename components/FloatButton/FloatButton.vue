@@ -1,5 +1,9 @@
 <template>
-  <a class="float-button" href="" target="_blank">
+  <a
+    class="float-button"
+    href="https://github.com/minhnguyen1505"
+    target="_blank"
+  >
     <span class="float-button__icon">
       <i class="faf fa-github"></i>
     </span>

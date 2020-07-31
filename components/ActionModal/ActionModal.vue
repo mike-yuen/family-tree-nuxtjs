@@ -16,7 +16,14 @@
               class="edit-modal-header__avatar"
               :src="`images/icon_${genderMapping(data)}.png`"
             />
-            <div class="edit-modal-header__scope__body">
+            <div v-if="typeRelationship" class="edit-modal-header__scope__body">
+              <h2>Add {{ typeRelationship }}</h2>
+              <small>
+                For {{ data.firstName }}
+                <strong>{{ data.lastName }}</strong>
+              </small>
+            </div>
+            <div v-else class="edit-modal-header__scope__body">
               <h2>
                 <span>{{ data.firstName }}</span>
                 <span>{{ data.lastName }}</span>
@@ -48,6 +55,8 @@
         :id="id"
         v-model="actionState"
         :person-data="data"
+        @typeRelationship="onChangeTypeRelationship"
+        @changePersonGender="onChangePersonGender"
       />
     </div>
   </b-modal>
@@ -78,12 +87,19 @@ export default {
   data() {
     return {
       gender: 'male',
-      actionState: 'info' // <edit> | <add> | <delete>
+      actionState: 'info', // <edit> | <add> | <delete>
+      typeRelationship: null,
+      newGender: null
     }
   },
   computed: {
     genderMapping() {
-      return (node) => (node && node.gender ? 'male' : 'female')
+      return (node) => {
+        if (this.newGender !== null) {
+          return this.newGender ? 'male' : 'female'
+        }
+        return node && node.gender ? 'male' : 'female'
+      }
     },
     isCurrentState() {
       return (state) =>
@@ -92,10 +108,18 @@ export default {
   },
   methods: {
     onCloseModal(id) {
+      this.typeRelationship = null
+      this.newGender = null
       this.$bvModal.hide(id)
     },
     resetModal() {
       this.actionState = 'info'
+    },
+    onChangeTypeRelationship(data) {
+      if (data) this.typeRelationship = data.toLowerCase()
+    },
+    onChangePersonGender(newGender) {
+      this.newGender = newGender
     }
   }
 }

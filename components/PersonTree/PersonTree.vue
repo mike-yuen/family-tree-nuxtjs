@@ -1,7 +1,14 @@
 <template>
   <div class="tree">
-    <ul class="tree-list">
-      <PersonCard :node="treeData" :handle-click="handleClick"></PersonCard>
+    <ul
+      class="tree-list"
+      :class="{ 'tree-list--one-child': hasOnlyOneChild(treeData) }"
+    >
+      <PersonCard
+        :node="treeData"
+        :one-child="hasOnlyOneChild(treeData)"
+        :handle-click="handleClick"
+      ></PersonCard>
     </ul>
   </div>
 </template>
@@ -17,6 +24,11 @@ export default {
     treeData: {
       type: Object,
       default: () => {}
+    }
+  },
+  computed: {
+    hasOnlyOneChild() {
+      return (node) => node && node.children && node.children.length === 1
     }
   },
   methods: {

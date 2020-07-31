@@ -47,9 +47,11 @@
       </ul>
     </div>
     <form v-if="stateValue === 'edit'" class="update-modal-variant__form">
-      {{ personData }}
       <div class="update-modal-variant__content">
-        <div class="update-modal-variant__header">
+        <div v-if="typeRelationship" class="update-modal-variant__header">
+          <h3>Add a new {{ typeRelationship | capitalize }}</h3>
+        </div>
+        <div v-else class="update-modal-variant__header">
           <h3>Edit this relation</h3>
           <a @click="onChangeState('delete')">
             Delete <i class="faf fa-trash"></i>
@@ -141,11 +143,9 @@
           <div class="update-modal-variant__controls row">
             <div class="control col">
               <label for="birth-date">Date</label>
-              <b-form-input
-                id="birth-date"
-                v-model="internalPersonData.dob"
-                size="sm"
-              ></b-form-input>
+              <no-ssr>
+                <DatePicker id="birth-date" v-model="internalPersonData.dob" />
+              </no-ssr>
             </div>
             <div class="control col">
               <label for="birth-place">Place</label>
@@ -179,12 +179,13 @@
           <div class="update-modal-variant__controls">
             <div class="control col">
               <label for="death-date">Date</label>
-              <b-form-input
-                id="death-date"
-                v-model="internalPersonData.dod"
-                size="sm"
-                :disabled="!isDeceased"
-              ></b-form-input>
+              <no-ssr>
+                <DatePicker
+                  id="death-date"
+                  v-model="internalPersonData.dod"
+                  :disabled="!isDeceased"
+                />
+              </no-ssr>
             </div>
             <div class="control col">
               <label for="death-place">Place</label>
@@ -231,9 +232,19 @@
 
 <script>
 import { mapActions } from 'vuex'
+import DatePicker from '@/components/DatePicker/DatePicker'
 
 export default {
   name: 'UpdateModalVariant',
+  components: {
+    DatePicker
+  },
+  filters: {
+    capitalize(string) {
+      if (typeof string !== 'string') return ''
+      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+    }
+  },
   props: {
     id: {
       type: String,
@@ -293,7 +304,8 @@ export default {
   methods: {
     ...mapActions({
       getCountries: 'getCountries',
-      addPersonData: 'addPersonData'
+      addPersonData: 'addPersonData',
+      editPersonData: 'editPersonData'
     }),
     onCloseModal(id) {
       this.$bvModal.hide(id)
@@ -319,10 +331,25 @@ export default {
       console.log('___________coolData', data)
       this.addPersonData(data).then((response) => {
         console.log('Add successful...', response)
+        this.onCloseModal(this.id)
+      })
+    },
+    handleEditPerson() {
+      console.log('____________ edit data', this.internalPersonData)
+      const id = this.dataForApi.id || this.personData.id
+      const data = Object.assign({}, this.internalPersonData)
+      this.$set(data, 'id', id)
+      this.editPersonData(data).then((response) => {
+        console.log('Edit successful...', response)
+        this.onCloseModal(this.id)
       })
     },
     onSaveModal() {
-      this.handleAddPerson()
+      if (this.dataForApi.id) {
+        this.handleAddPerson()
+      } else {
+        this.handleEditPerson()
+      }
     },
     onChangeState(action, typeRelationship = '') {
       if (action) {
@@ -331,6 +358,7 @@ export default {
         }
         this.typeRelationship = typeRelationship
         this.stateValue = action
+        this.$emit('typeRelationship', this.typeRelationship)
       }
     },
     setRootPersonData() {
@@ -344,21 +372,30 @@ export default {
     setPersonDataIntoInternal() {
       this.internalPersonData.firstName = this.personData.firstName || ''
       this.internalPersonData.lastName = this.personData.lastName || ''
-      this.internalPersonData.gender = this.personData.gender || true
+      this.internalPersonData.gender = this.personData.gender
+      this.internalPersonData.isLiving = this.personData.isLiving
       this.internalPersonData.dob = this.personData.dob || null
       this.internalPersonData.dod = this.personData.dod || null
-      this.internalPersonData.birthLocation = this.personData.birthLocation || {
-        countryId: 0,
-        address: ''
-      }
-      this.internalPersonData.deathLocation = this.personData.deathLocation || {
+      this.internalPersonData.birthLocation = {
+        ...this.personData.birthLocation
+      } || {
         countryId: 0,
         address: ''
       }
       this.internalPersonData.deathLocation = {
+        ...this.personData.deathLocation
+      } || {
         countryId: 0,
         address: ''
       }
+    }
+  },
+  watch: {
+    'internalPersonData.gender': {
+      handler(newValue) {
+        this.$emit('changePersonGender', newValue)
+      },
+      deep: true
     }
   },
   created() {

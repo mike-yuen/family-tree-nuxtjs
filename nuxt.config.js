@@ -32,6 +32,7 @@ export default {
   plugins: [
     { src: '~/plugins/axios.js' },
     { src: '~/plugins/vee-validation.js', ssr: false },
+    { src: '~/plugins/datepicker', ssr: false },
     '~/plugins/vue-moment.js'
   ],
   buildModules: ['@nuxtjs/eslint-module'],
