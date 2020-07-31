@@ -1,10 +1,14 @@
 export const state = () => ({
+  user: {},
   countries: {},
   treeData: {},
   currentPersonData: {}
 })
 
 export const mutations = {
+  setUser(state, newValue) {
+    state.user = newValue
+  },
   setCountries(state, newValue) {
     state.countries = newValue
   },
@@ -17,6 +21,17 @@ export const mutations = {
 }
 
 export const actions = {
+  login({ commit }, payload) {
+    return this.$fTAxios
+      .post('/api/User/login', payload)
+      .then((data) => {
+        commit('setCountries', data)
+        return data
+      })
+      .catch((err) => {
+        return err
+      })
+  },
   getCountries({ commit }) {
     return this.$fTAxios
       .get('/api/configuration/countries')
@@ -53,6 +68,16 @@ export const actions = {
   addPersonData({ commit }, personData) {
     return this.$fTAxios
       .post('/api/individual', personData)
+      .then((data) => {
+        return data
+      })
+      .catch((err) => {
+        return err
+      })
+  },
+  editPersonData({ commit }, personData) {
+    return this.$fTAxios
+      .put('/api/individual', personData)
       .then((data) => {
         return data
       })

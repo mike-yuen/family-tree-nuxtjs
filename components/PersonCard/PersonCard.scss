@@ -204,12 +204,30 @@
   &:first-child {
     &::before {
       left: 50%;
-      width: 50%
+      width: 50%;
     }
   }
   &:last-child {
     &::before {
       width: 50%;
+    }
+  }
+  &--has-spouse {
+    &:not(:last-child) {
+      &::before {
+        width: calc(100%);
+      }
+    }
+    &:first-child {
+      &::before {
+        left: 55px;
+        width: calc(50% + 55px);
+      }
+    }
+    &:last-child {
+      &::before {
+        width: calc(50% - 55px);
+      }
     }
   }
   &__branch {
@@ -227,6 +245,19 @@
       border-left: 1px solid #2e2c25;
       content: '';
       z-index: 1;
+    }
+    &--one-child {
+      .node-tree {
+        &:before {
+          width: 0;
+        }
+        &--has-spouse {
+          &::before {
+            left: 55px;
+            width: 55px;
+          }
+        }
+      }
     }
   }
 }

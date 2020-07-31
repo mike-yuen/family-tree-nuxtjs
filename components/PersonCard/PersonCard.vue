@@ -1,5 +1,5 @@
 <template>
-  <li v-if="node" class="node-tree">
+  <li v-if="node" class="node-tree" :class="innerNodeClass(node)">
     <div class="person-card-pair" :class="innerPairClass(node)">
       <div
         class="person-card"
@@ -57,12 +57,17 @@
         class="person-card person-card--empty person-card--spouse"
       ></div>
     </div>
-    <ul v-if="hasChildren(node)" class="node-tree__branch">
+    <ul
+      v-if="hasChildren(node)"
+      class="node-tree__branch"
+      :class="{ 'node-tree__branch--one-child': oneChild }"
+    >
       <PersonCard
         v-for="(child, index) in node.children"
         :key="index"
         :node="child"
         :handle-click="handleClick"
+        :one-child="hasOnlyOneChild(child)"
       >
       </PersonCard>
     </ul>
@@ -80,6 +85,10 @@ export default {
     handleClick: {
       type: Function,
       default: () => {}
+    },
+    oneChild: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -90,6 +99,15 @@ export default {
   computed: {
     genderMapping() {
       return (node) => (node && node.gender ? 'male' : 'female')
+    },
+    hasOnlyOneChild() {
+      return (node) => node && node.children && node.children.length === 1
+    },
+    innerNodeClass() {
+      return (node) =>
+        this.hasSpouse(node) || this.hasChildren(node)
+          ? 'node-tree--has-spouse'
+          : ''
     },
     innerPairClass() {
       return (node) =>

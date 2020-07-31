@@ -132,6 +132,20 @@ export default {
       set(val) {
         this.$emit('input', val)
       }
+    },
+    disableAddRelative() {
+      return (node) => {
+        if (!node.parentId && !node.isRoot) {
+          this.actionList.find((item) => {
+            if (item.id === 'add-relative-tooltip') item.disabled = true
+          })
+        }
+      }
+    }
+  },
+  watch: {
+    data() {
+      this.disableAddRelative(this.data)
     }
   },
   methods: {
