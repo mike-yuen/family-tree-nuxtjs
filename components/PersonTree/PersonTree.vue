@@ -2,11 +2,11 @@
   <div class="tree">
     <ul
       class="tree-list"
-      :class="{ 'tree-list--one-child': hasOnlyOneChild(treeData) }"
+      :class="{ 'tree-list--one-child': hasOnlyOneChild(value) }"
     >
       <PersonCard
-        :node="treeData"
-        :one-child="hasOnlyOneChild(treeData)"
+        :node="value"
+        :one-child="hasOnlyOneChild(value)"
         :handle-click="handleClick"
       ></PersonCard>
     </ul>
@@ -21,7 +21,7 @@ export default {
     PersonCard
   },
   props: {
-    treeData: {
+    value: {
       type: Object,
       default: () => {}
     }

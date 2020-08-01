@@ -19,11 +19,15 @@
       ></svg>
       <div id="pedigree" class="pedigree-view__content">
         <div id="pedigree-container" class="pedigree-view__container">
-          <PersonTree :tree-data="tree" @nodeClick="logClick"></PersonTree>
+          <PersonTree v-model="tree" @nodeClick="logClick"></PersonTree>
         </div>
       </div>
     </section>
-    <ActionModal id="action-modal" :data="dataPerson" />
+    <ActionModal
+      id="action-modal"
+      :data="dataPerson"
+      @deleteNodeData="deleteNodeData"
+    />
     <FloatButton />
   </div>
 </template>
@@ -45,7 +49,8 @@ export default {
   data: () => {
     return {
       dataPerson: {},
-      tree: {}
+      tree: {},
+      selectedNode: {}
     }
   },
   computed: {
@@ -114,23 +119,37 @@ export default {
         `translate(${d3.event.transform.x}px, ${d3.event.transform.y}px) scale(${d3.event.transform.k})`
       )
     },
+    searchNode(treeData, parentId, id) {
+      if (treeData.id === parentId) {
+        const needRemoveIndex = treeData.children.findIndex(
+          (child) => child.id === id
+        )
+        if (needRemoveIndex !== -1) {
+          treeData.children.splice(needRemoveIndex, 1)
+        }
+      } else if (treeData.children !== null) {
+        for (let i = 0; i < treeData.children.length; i++) {
+          this.searchNode(treeData.children[i], parentId, id)
+        }
+      }
+      return treeData
+    },
+    deleteNodeData() {
+      const result = this.searchNode(
+        JSON.parse(JSON.stringify(this.tree)),
+        this.selectedNode.parentId,
+        this.selectedNode.id
+      )
+      this.tree = result
+    },
     logClick(node) {
       this.getPersonData(node.id).then((response) => {
         if (response.data) {
           this.dataPerson = response.data
-          console.log('___________node', response.data)
+          this.selectedNode = Object.assign({}, node)
+          this.$bvModal.show('action-modal')
         }
       })
-      this.$bvModal.show('action-modal')
-      // if (node.children) {
-      //   node.children.push({
-      //     data: [{ name: `add-from-${node.data[0].name}` }]
-      //   })
-      // } else {
-      //   Vue.set(node, 'children', [
-      //     { data: [{ name: `new-from-${node.data[0].name}` }] }
-      //   ])
-      // }
     }
   },
   created() {

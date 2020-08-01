@@ -43,6 +43,7 @@
         v-if="isCurrentState(['delete'])"
         :id="id"
         :person-data="data"
+        @deleteNodeData="$emit('deleteNodeData')"
       />
       <InfoModalVariant
         v-if="isCurrentState(['info'])"
