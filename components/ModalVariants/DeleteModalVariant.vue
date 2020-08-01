@@ -46,9 +46,11 @@ export default {
       this.$bvModal.hide(id)
     },
     deletePerson() {
-      this.deletePersonData(this.personData.id).then(() => {
-        console.log('delete')
-        this.onCloseModal(this.id)
+      this.deletePersonData(this.personData.id).then((response) => {
+        if (response) {
+          this.onCloseModal(this.id)
+          this.$emit('deleteNodeData')
+        }
       })
     }
   }
