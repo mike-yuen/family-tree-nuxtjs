@@ -58,6 +58,7 @@
         :person-data="data"
         @typeRelationship="onChangeTypeRelationship"
         @changePersonGender="onChangePersonGender"
+        @editNodeData="editNodeData"
       />
     </div>
   </b-modal>
@@ -121,6 +122,9 @@ export default {
     },
     onChangePersonGender(newGender) {
       this.newGender = newGender
+    },
+    editNodeData(data) {
+      this.$emit('editNodeData', data)
     }
   }
 }

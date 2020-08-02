@@ -335,12 +335,12 @@ export default {
       })
     },
     handleEditPerson() {
-      console.log('____________ edit data', this.internalPersonData)
       const id = this.dataForApi.id || this.personData.id
       const data = Object.assign({}, this.internalPersonData)
       this.$set(data, 'id', id)
       this.editPersonData(data).then((response) => {
-        console.log('Edit successful...', response)
+        this.$emit('editNodeData', this.internalPersonData)
+        this.$emit('editNodeData', data)
         this.onCloseModal(this.id)
       })
     },

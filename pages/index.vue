@@ -27,7 +27,24 @@
       id="action-modal"
       :data="dataPerson"
       @deleteNodeData="deleteNodeData"
+      @editNodeData="editNodeData"
     />
+    <b-toast id="warning-toast" variant="warning" solid>
+      <template v-slot:toast-title>
+        <div class="d-flex flex-grow-1 align-items-baseline">
+          <b-img
+            blank
+            blank-color="#ff5555"
+            class="mr-2"
+            width="12"
+            height="12"
+          ></b-img>
+          <strong class="mr-auto">Notice!</strong>
+        </div>
+      </template>
+      Please login before action. Go to
+      <nuxt-link to="/login">Login</nuxt-link>
+    </b-toast>
     <FloatButton />
   </div>
 </template>
@@ -74,6 +91,13 @@ export default {
       .on('click', this.clicked)
     this.pedigree.call(this.zoom)
   },
+  created() {
+    this.getTreeData().then((response) => {
+      if (response.data) {
+        this.tree = response.data
+      }
+    })
+  },
   methods: {
     ...mapActions({
       getTreeData: 'getTreeData',
@@ -119,7 +143,7 @@ export default {
         `translate(${d3.event.transform.x}px, ${d3.event.transform.y}px) scale(${d3.event.transform.k})`
       )
     },
-    searchNode(treeData, parentId, id) {
+    prepareDeleteData(treeData, parentId, id) {
       if (treeData.id === parentId) {
         const needRemoveIndex = treeData.children.findIndex(
           (child) => child.id === id
@@ -129,16 +153,35 @@ export default {
         }
       } else if (treeData.children !== null) {
         for (let i = 0; i < treeData.children.length; i++) {
-          this.searchNode(treeData.children[i], parentId, id)
+          this.prepareDeleteData(treeData.children[i], parentId, id)
+        }
+      }
+      return treeData
+    },
+    prepareEditData(treeData, data) {
+      if (treeData.id === data.id) {
+        for (const prop in data) {
+          this.$set(treeData, [prop], data[prop])
+        }
+      } else if (treeData.children !== null) {
+        for (let i = 0; i < treeData.children.length; i++) {
+          this.prepareEditData(treeData.children[i], data)
         }
       }
       return treeData
     },
     deleteNodeData() {
-      const result = this.searchNode(
+      const result = this.prepareDeleteData(
         JSON.parse(JSON.stringify(this.tree)),
         this.selectedNode.parentId,
         this.selectedNode.id
+      )
+      this.tree = result
+    },
+    editNodeData(data) {
+      const result = this.prepareEditData(
+        JSON.parse(JSON.stringify(this.tree)),
+        data
       )
       this.tree = result
     },
@@ -148,20 +191,11 @@ export default {
           this.dataPerson = response.data
           this.selectedNode = Object.assign({}, node)
           this.$bvModal.show('action-modal')
+        } else {
+          this.$bvToast.show('warning-toast')
         }
       })
     }
-  },
-  created() {
-    this.getTreeData()
-      .then((response) => {
-        if (response.data) {
-          this.tree = response.data
-        }
-      })
-      .catch((err) => {
-        console.log('err getTreeData', err)
-      })
   }
 }
 </script>
