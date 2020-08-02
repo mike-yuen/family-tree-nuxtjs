@@ -124,10 +124,13 @@ export default {
       return dirty || validated ? valid : null
     },
     onSubmit() {
-      this.login(this.form).then((response) => {
+      this.login(this.form).then(async (response) => {
         if (response && response.data) {
           const responseData = response.data
-          localStorage.setItem('authFamilyTree', responseData.data)
+          await localStorage.setItem('authFamilyTree', responseData.data)
+          this.$router.push({
+            path: '/'
+          })
         }
       })
     },

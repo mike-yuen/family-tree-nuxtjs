@@ -247,13 +247,13 @@
       z-index: 1;
     }
     &--one-child {
-      .node-tree {
+      & > .node-tree {
         &:before {
           width: 0;
         }
         &--has-spouse {
           &::before {
-            left: 55px;
+            left: calc(50% - 55px);
             width: 55px;
           }
         }

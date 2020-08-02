@@ -21,9 +21,13 @@ export default {
   props: {
     value: [String, Date],
     typeOption: {
-      type: String
+      type: String,
+      default: ''
     },
-    placeholder: String,
+    placeholder: {
+      type: String,
+      default: ''
+    },
     disabled: Boolean
   },
   computed: {
