@@ -46,187 +46,213 @@
         </li>
       </ul>
     </div>
-    <form v-if="stateValue === 'edit'" class="update-modal-variant__form">
-      <div class="update-modal-variant__content">
-        <div v-if="typeRelationship" class="update-modal-variant__header">
-          <h3>Add a new {{ typeRelationship | capitalize }}</h3>
-        </div>
-        <div v-else class="update-modal-variant__header">
-          <h3>Edit this relation</h3>
-          <a @click="onChangeState('delete')">
-            Delete <i class="faf fa-trash"></i>
-          </a>
-        </div>
-        <div class="update-modal-variant__group">
-          <div
-            class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
-          >
-            <span>
-              <i class="fa fa-exclamation-triangle"></i>
-              Name
-            </span>
-            <small> Required </small>
+    <validation-observer ref="editObserver" v-slot="{ handleSubmit }">
+      <b-form
+        v-if="stateValue === 'edit'"
+        class="update-modal-variant__form"
+        @submit.stop.prevent="handleSubmit(onSaveModal)"
+        @reset="onReset"
+      >
+        <div class="update-modal-variant__content">
+          <div v-if="typeRelationship" class="update-modal-variant__header">
+            <h3>Add a new {{ typeRelationship | capitalize }}</h3>
           </div>
-          <div class="update-modal-variant__controls row">
-            <div class="control col">
-              <label for="firstname"> First and middle names </label>
-              <b-form-input
-                id="firstname"
-                v-model="internalPersonData.firstName"
-                size="sm"
-                placeholder="Enter your first name"
-              ></b-form-input>
-            </div>
-            <div class="control col">
-              <label for="surname">Last name</label>
-              <b-form-input
-                id="lastName"
-                v-model="internalPersonData.lastName"
-                size="sm"
-                placeholder="Enter your last name"
-              ></b-form-input>
-            </div>
+          <div v-else class="update-modal-variant__header">
+            <h3>Edit this relation</h3>
+            <a v-if="!personData.isRoot" @click="onChangeState('delete')">
+              Delete <i class="faf fa-trash"></i>
+            </a>
           </div>
-        </div>
-        <div class="update-modal-variant__group">
-          <div class="update-modal-variant__mainlabel">Gender</div>
-          <div class="update-modal-variant__controls">
-            <div class="control control--radio">
-              <b-form-radio
-                v-model="internalPersonData.gender"
-                name="gender"
-                :value="true"
-              >
-                Male
-              </b-form-radio>
+          <div class="update-modal-variant__group">
+            <div
+              class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
+            >
+              <span>
+                <i class="fa fa-exclamation-triangle"></i>
+                Name
+              </span>
+              <small> Required </small>
             </div>
-            <div class="control control--radio">
-              <b-form-radio
-                v-model="internalPersonData.gender"
-                name="gender"
-                :value="false"
-              >
-                Female
-              </b-form-radio>
+            <div class="update-modal-variant__controls row">
+              <div class="control col">
+                <label for="firstname"> First and middle names </label>
+                <validation-provider
+                  v-slot="validationContext"
+                  name="firstname"
+                  :rules="{ required: true }"
+                >
+                  <b-form-input
+                    id="firstname"
+                    v-model="internalPersonData.firstName"
+                    size="sm"
+                    :state="getValidationState(validationContext)"
+                    placeholder="Enter your first name"
+                  ></b-form-input>
+                </validation-provider>
+              </div>
+              <div class="control col">
+                <label for="surname">Last name</label>
+                <validation-provider
+                  v-slot="validationContext"
+                  name="lastname"
+                  :rules="{ required: true }"
+                >
+                  <b-form-input
+                    id="lastName"
+                    v-model="internalPersonData.lastName"
+                    size="sm"
+                    :state="getValidationState(validationContext)"
+                    placeholder="Enter your last name"
+                  ></b-form-input>
+                </validation-provider>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="update-modal-variant__group">
-          <div class="update-modal-variant__mainlabel">Status</div>
-          <div class="update-modal-variant__controls">
-            <div class="control control--radio">
-              <b-form-radio
-                v-model="internalPersonData.isLiving"
-                name="status"
-                :value="true"
-              >
-                Living
-              </b-form-radio>
-            </div>
-            <div class="control control--radio">
-              <b-form-radio
-                v-model="internalPersonData.isLiving"
-                name="status"
-                :value="false"
-              >
-                Deceased
-              </b-form-radio>
-            </div>
-          </div>
-        </div>
-        <div class="update-modal-variant__group">
-          <div
-            class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
-          >
-            Birth
-          </div>
-          <div class="update-modal-variant__controls row">
-            <div class="control col">
-              <label for="birth-date">Date</label>
-              <no-ssr>
-                <DatePicker id="birth-date" v-model="internalPersonData.dob" />
-              </no-ssr>
-            </div>
-            <div class="control col">
-              <label for="birth-place">Place</label>
-              <b-form-select
-                id="birthdeath-place"
-                v-model="internalPersonData.birthLocation.countryId"
-                :options="placeOptions"
-                value-field="id"
-                text-field="name"
-                size="sm"
-              >
-              </b-form-select>
-            </div>
-            <div class="control col">
-              <label for="birth-address">Address</label>
-              <b-form-input
-                id="birth-address"
-                v-model="internalPersonData.birthLocation.address"
-                size="sm"
-                placeholder="Street or building"
-              ></b-form-input>
+          <div class="update-modal-variant__group">
+            <div class="update-modal-variant__mainlabel">Gender</div>
+            <div class="update-modal-variant__controls">
+              <div class="control control--radio">
+                <b-form-radio
+                  v-model="internalPersonData.gender"
+                  name="gender"
+                  :value="true"
+                >
+                  Male
+                </b-form-radio>
+              </div>
+              <div class="control control--radio">
+                <b-form-radio
+                  v-model="internalPersonData.gender"
+                  name="gender"
+                  :value="false"
+                >
+                  Female
+                </b-form-radio>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="update-modal-variant__group">
-          <div
-            class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
-          >
-            Death
+          <div class="update-modal-variant__group">
+            <div class="update-modal-variant__mainlabel">Status</div>
+            <div class="update-modal-variant__controls">
+              <div class="control control--radio">
+                <b-form-radio
+                  v-model="internalPersonData.isLiving"
+                  name="status"
+                  :value="true"
+                >
+                  Living
+                </b-form-radio>
+              </div>
+              <div class="control control--radio">
+                <b-form-radio
+                  v-model="internalPersonData.isLiving"
+                  name="status"
+                  :value="false"
+                >
+                  Deceased
+                </b-form-radio>
+              </div>
+            </div>
           </div>
-          <div class="update-modal-variant__controls">
-            <div class="control col">
-              <label for="death-date">Date</label>
-              <no-ssr>
-                <DatePicker
-                  id="death-date"
-                  v-model="internalPersonData.dod"
+          <div class="update-modal-variant__group">
+            <div
+              class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
+            >
+              Birth
+            </div>
+            <div class="update-modal-variant__controls row">
+              <div class="control col">
+                <label for="birth-date">Date</label>
+                <no-ssr>
+                  <DatePicker
+                    id="birth-date"
+                    v-model="internalPersonData.dob"
+                    :rules="{ required: true }"
+                  />
+                </no-ssr>
+              </div>
+              <div class="control col">
+                <label for="birth-place">Place</label>
+                <b-form-select
+                  id="birthdeath-place"
+                  v-model="internalPersonData.birthLocation.countryId"
+                  :options="placeOptions"
+                  value-field="id"
+                  text-field="name"
+                  size="sm"
+                >
+                </b-form-select>
+              </div>
+              <div class="control col">
+                <label for="birth-address">Address</label>
+                <b-form-input
+                  id="birth-address"
+                  v-model="internalPersonData.birthLocation.address"
+                  size="sm"
+                  placeholder="Street or building"
+                ></b-form-input>
+              </div>
+            </div>
+          </div>
+          <div class="update-modal-variant__group">
+            <div
+              class="update-modal-variant__mainlabel update-modal-variant__mainlabel--margin"
+            >
+              Death
+            </div>
+            <div class="update-modal-variant__controls">
+              <div class="control col">
+                <label for="death-date">Date</label>
+                <no-ssr>
+                  <DatePicker
+                    id="death-date"
+                    v-model="internalPersonData.dod"
+                    :rules="isDeceased ? { required: true } : {}"
+                    :disabled="!isDeceased"
+                  />
+                </no-ssr>
+              </div>
+              <div class="control col">
+                <label for="death-place">Place</label>
+                <b-form-select
+                  id="death-place"
+                  v-model="internalPersonData.deathLocation.countryId"
+                  :options="placeOptions"
+                  value-field="id"
+                  text-field="name"
+                  size="sm"
                   :disabled="!isDeceased"
-                />
-              </no-ssr>
-            </div>
-            <div class="control col">
-              <label for="death-place">Place</label>
-              <b-form-select
-                id="death-place"
-                v-model="internalPersonData.deathLocation.countryId"
-                :options="placeOptions"
-                value-field="id"
-                text-field="name"
-                size="sm"
-                :disabled="!isDeceased"
-              >
-              </b-form-select>
-            </div>
-            <div class="control col">
-              <label for="death-address">Address</label>
-              <b-form-input
-                id="death-address"
-                v-model="internalPersonData.deathLocation.address"
-                size="sm"
-                placeholder="Street or building"
-                :disabled="!isDeceased"
-              ></b-form-input>
+                >
+                </b-form-select>
+              </div>
+              <div class="control col">
+                <label for="death-address">Address</label>
+                <b-form-input
+                  id="death-address"
+                  v-model="internalPersonData.deathLocation.address"
+                  size="sm"
+                  placeholder="Street or building"
+                  :disabled="!isDeceased"
+                ></b-form-input>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="update-modal-variant__footer">
-        <b-button pill variant="info" class="px-4" @click="onSaveModal(id)">
-          Save Changes
-        </b-button>
-        <b-button
-          pill
-          variant="outline-info"
-          class="ml-2 px-4"
-          @click="onCloseModal(id)"
-        >
-          C<i class="fa fa-poo"></i>ncel
-        </b-button>
-      </div>
-    </form>
+        <div class="update-modal-variant__footer">
+          <b-button pill variant="info" class="px-4" type="submit">
+            Save Changes
+          </b-button>
+          <b-button
+            pill
+            variant="outline-info"
+            class="ml-2 px-4"
+            @click="onCloseModal(id)"
+          >
+            C<i class="fa fa-poo"></i>ncel
+          </b-button>
+        </div>
+      </b-form>
+    </validation-observer>
   </div>
 </template>
 
@@ -285,7 +311,8 @@ export default {
       // internal
       isCreated: 'false',
       typeRelationship: '',
-      placeOptions: []
+      placeOptions: [],
+      formErrors: []
     }
   },
   computed: {
@@ -307,6 +334,14 @@ export default {
       addPersonData: 'addPersonData',
       editPersonData: 'editPersonData'
     }),
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null
+    },
+    onReset() {
+      this.$nextTick(() => {
+        this.$refs.editObserver.reset()
+      })
+    },
     onCloseModal(id) {
       this.$bvModal.hide(id)
     },

@@ -1,17 +1,26 @@
 <template>
   <div class="nuxt-datepicker">
-    <date-picker
-      v-model="dataValue"
-      type="date"
-      format="DD MMM YYYY"
-      :disabled-date="disabledDate"
-      placeholder="DD-MM-YYYY"
-      :disabled="disabled"
+    <validation-provider
+      v-slot="validationContext"
+      name="datepicker"
+      :rules="rules"
     >
-      <template slot="icon-calendar">
-        <i class="fa fa-calendar" />
-      </template>
-    </date-picker>
+      <date-picker
+        v-model="dataValue"
+        type="date"
+        format="DD MMM YYYY"
+        :disabled-date="disabledDate"
+        placeholder="DD-MM-YYYY"
+        :disabled="disabled"
+        :class="{ error: validationContext.errors[0] }"
+        :editable="false"
+        :clearable="false"
+      >
+        <template slot="icon-calendar">
+          <i class="fa fa-calendar" />
+        </template>
+      </date-picker>
+    </validation-provider>
   </div>
 </template>
 
@@ -28,7 +37,8 @@ export default {
       type: String,
       default: ''
     },
-    disabled: Boolean
+    disabled: Boolean,
+    rules: Object
   },
   computed: {
     disabledDate() {
@@ -36,7 +46,7 @@ export default {
     },
     dataValue: {
       get() {
-        return this.$props.value ? new Date(this.$props.value) : null
+        return this.$props.value ? new Date(this.$props.value) : new Date()
       },
       set(val) {
         this.$emit('input', this.$moment(val).toISOString())
@@ -53,6 +63,11 @@ export default {
     input {
       height: calc(1.5em + 0.5rem + 2px);
       border-radius: 0;
+    }
+    &.error {
+      input {
+        border: 1px solid red;
+      }
     }
   }
   .mx-input:disabled {
