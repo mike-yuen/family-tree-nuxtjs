@@ -328,9 +328,8 @@ export default {
       }
       const data = Object.assign({}, this.dataForApi)
       this.$set(data, 'relationshipInput', this.internalPersonData)
-      console.log('___________coolData', data)
       this.addPersonData(data).then((response) => {
-        console.log('Add successful...', response)
+        this.$emit('reloadData')
         this.onCloseModal(this.id)
       })
     },
@@ -339,8 +338,7 @@ export default {
       const data = Object.assign({}, this.internalPersonData)
       this.$set(data, 'id', id)
       this.editPersonData(data).then((response) => {
-        this.$emit('editNodeData', this.internalPersonData)
-        this.$emit('editNodeData', data)
+        this.$emit('reloadData')
         this.onCloseModal(this.id)
       })
     },

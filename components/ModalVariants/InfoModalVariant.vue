@@ -11,8 +11,9 @@
               <strong>Born</strong>
               <span>{{ data.dob | moment('DD MMMM YYYY') }}</span>
             </h3>
-            <div class="info-modal-variant__location">
-              VietNam
+            <div v-if="data.birthLocation" class="info-modal-variant__location">
+              {{ data.birthLocation.address }},
+              {{ mappingCountry(data.birthLocation.countryId) }}
             </div>
           </div>
         </li>
@@ -43,10 +44,11 @@
           <div class="info-modal-variant__body">
             <h3>
               <strong>Died</strong>
-              <span>{{ data.dob | moment('DD MMMM YYYY') }}</span>
+              <span>{{ data.dod | moment('DD MMMM YYYY') }}</span>
             </h3>
-            <div class="info-modal-variant__location">
-              Somewhere
+            <div v-if="data.deathLocation" class="info-modal-variant__location">
+              {{ data.deathLocation.address }},
+              {{ mappingCountry(data.deathLocation.countryId) }}
             </div>
           </div>
         </li>
@@ -71,6 +73,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'InfoModalVariant',
   props: {
@@ -121,7 +124,8 @@ export default {
           disabled: true
         }
       ],
-      msgTooltip: 'This function is not available!'
+      msgTooltip: 'This function is not available!',
+      placeOptions: []
     }
   },
   computed: {
@@ -148,12 +152,26 @@ export default {
       this.disableAddRelative(this.data)
     }
   },
+  created() {
+    this.getCountries().then((response) => {
+      if (response.data) {
+        this.placeOptions = response.data
+      }
+    })
+  },
   methods: {
+    ...mapActions({
+      getCountries: 'getCountries'
+    }),
     onCloseModal(id) {
       this.$bvModal.hide(id)
     },
     onChangeState(action) {
       if (action) this.stateValue = action
+    },
+    mappingCountry(id) {
+      const index = this.placeOptions.findIndex((item) => item.id === id)
+      return index !== -1 ? this.placeOptions[index].name : null
     }
   }
 }

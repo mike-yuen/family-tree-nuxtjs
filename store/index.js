@@ -94,5 +94,15 @@ export const actions = {
       .catch((err) => {
         return err
       })
+  },
+  getCurrentUser({ commit }) {
+    return this.$fTAxios
+      .get(`/api/User/current-user`)
+      .then((data) => {
+        return data
+      })
+      .catch((err) => {
+        return err
+      })
   }
 }

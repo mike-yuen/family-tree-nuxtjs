@@ -116,6 +116,11 @@ export default {
   },
   computed: {},
   mounted() {},
+  head() {
+    return {
+      title: 'Login to Family Hub | The best application for your family'
+    }
+  },
   methods: {
     ...mapActions({
       login: 'login'
