@@ -21,7 +21,9 @@
             </strong>
           </h2>
           <small class="person-card__dates"
-            >{{ node.dob | moment('YYYY') }}–Living</small
+            >{{ node.dob | moment('YYYY') }}–{{
+              node.dod ? $moment(node.dod).format('YYYY') : 'Living'
+            }}</small
           >
         </div>
       </div>
@@ -33,7 +35,7 @@
       >
         <img
           class="person-card__image"
-          :src="`images/icon_${genderMapping(node.spouse.gender)}.png`"
+          :src="`images/icon_${genderMapping(node.spouse)}.png`"
         />
         <span v-if="false" class="person-card__loading">
           <img src="~assets/svg/spinner.svg" />
@@ -48,7 +50,9 @@
             </strong>
           </h2>
           <small class="person-card__dates"
-            >{{ node.spouse.dob | moment('YYYY') }}–Living</small
+            >{{ node.spouse.dob | moment('YYYY') }}–{{
+              node.dod ? $moment(node.dod).format('YYYY') : 'Living'
+            }}</small
           >
         </div>
       </div>

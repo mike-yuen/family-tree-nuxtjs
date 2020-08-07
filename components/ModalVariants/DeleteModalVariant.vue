@@ -49,7 +49,7 @@ export default {
       this.deletePersonData(this.personData.id).then((response) => {
         if (response) {
           this.onCloseModal(this.id)
-          this.$emit('deleteNodeData')
+          this.$emit('reloadData')
         }
       })
     }

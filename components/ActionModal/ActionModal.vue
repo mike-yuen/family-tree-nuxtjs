@@ -28,7 +28,11 @@
                 <span>{{ data.firstName }}</span>
                 <span>{{ data.lastName }}</span>
               </h2>
-              <small>{{ data.dob | moment('YYYY') }}-Living</small>
+              <small
+                >{{ data.dob | moment('YYYY') }}-{{
+                  data.dod ? $moment(data.dod).format('YYYY') : 'Living'
+                }}</small
+              >
             </div>
           </div>
         </div>
@@ -43,7 +47,7 @@
         v-if="isCurrentState(['delete'])"
         :id="id"
         :person-data="data"
-        @deleteNodeData="$emit('deleteNodeData')"
+        @reloadData="reloadData"
       />
       <InfoModalVariant
         v-if="isCurrentState(['info'])"
@@ -58,7 +62,7 @@
         :person-data="data"
         @typeRelationship="onChangeTypeRelationship"
         @changePersonGender="onChangePersonGender"
-        @editNodeData="editNodeData"
+        @reloadData="reloadData"
       />
     </div>
   </b-modal>
@@ -108,10 +112,14 @@ export default {
         state.length ? state.includes(this.actionState) : false
     }
   },
-  methods: {
-    onCloseModal(id) {
+  watch: {
+    data() {
       this.typeRelationship = null
       this.newGender = null
+    }
+  },
+  methods: {
+    onCloseModal(id) {
       this.$bvModal.hide(id)
     },
     resetModal() {
@@ -123,8 +131,8 @@ export default {
     onChangePersonGender(newGender) {
       this.newGender = newGender
     },
-    editNodeData(data) {
-      this.$emit('editNodeData', data)
+    reloadData() {
+      this.$emit('reloadData')
     }
   }
 }

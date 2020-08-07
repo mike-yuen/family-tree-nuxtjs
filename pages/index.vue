@@ -26,8 +26,7 @@
     <ActionModal
       id="action-modal"
       :data="dataPerson"
-      @deleteNodeData="deleteNodeData"
-      @editNodeData="editNodeData"
+      @reloadData="reloadTreeData"
     />
     <b-toast id="warning-toast" variant="warning" solid>
       <template v-slot:toast-title>
@@ -97,6 +96,11 @@ export default {
         this.tree = response.data
       }
     })
+  },
+  head() {
+    return {
+      title: 'Family Hub | The best application for your family'
+    }
   },
   methods: {
     ...mapActions({
@@ -185,6 +189,14 @@ export default {
       )
       this.tree = result
     },
+    reloadTreeData() {
+      this.getTreeData().then((response) => {
+        if (response.data) {
+          this.tree = response.data
+        }
+      })
+    },
+
     logClick(node) {
       this.getPersonData(node.id).then((response) => {
         if (response.data) {
