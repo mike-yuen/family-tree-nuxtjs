@@ -51,7 +51,9 @@
           </h2>
           <small class="person-card__dates"
             >{{ node.spouse.dob | moment('YYYY') }}–{{
-              node.dod ? $moment(node.dod).format('YYYY') : 'Living'
+              node.spouse.dod
+                ? $moment(node.spouse.dod).format('YYYY')
+                : 'Living'
             }}</small
           >
         </div>

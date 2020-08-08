@@ -13,8 +13,6 @@
         placeholder="DD-MM-YYYY"
         :disabled="disabled"
         :class="{ error: validationContext.errors[0] }"
-        :editable="false"
-        :clearable="false"
       >
         <template slot="icon-calendar">
           <i class="fa fa-calendar" />
@@ -46,7 +44,7 @@ export default {
     },
     dataValue: {
       get() {
-        return this.$props.value ? new Date(this.$props.value) : new Date()
+        return this.$props.value ? new Date(this.$props.value) : null
       },
       set(val) {
         this.$emit('input', this.$moment(val).toISOString())
