@@ -1,27 +1,46 @@
 <template>
   <div class="container">
-    <section class="pedigree-view">
-      <b-btn
-        id="recenter"
-        size="sm"
-        variant="outline-secondary"
-        class="pedigree-view__reset"
-        title="Re-center"
-        @click="reset()"
-      >
-        <i class="fa fa-location"></i>
-      </b-btn>
+    <section
+      class="pedigree-view"
+      :class="{ 'pedigree-view__collapse': !isHeaderExpanded }"
+    >
+      <b-button-group vertical class="pedigree-view__tools rounded">
+        <b-btn
+          id="recenter"
+          size="sm"
+          variant="light"
+          title="Re-center"
+          @click="reset()"
+        >
+          <i class="fa fa-location"></i>
+        </b-btn>
+        <b-btn
+          id="fullscreen"
+          size="sm"
+          variant="light"
+          :title="isHeaderExpanded ? 'Fullscreen' : 'Compress'"
+          @click="expand()"
+        >
+          <i v-if="isHeaderExpanded" class="fa fa-expand" />
+          <i v-else class="fa fa-compress" />
+        </b-btn>
+      </b-button-group>
       <svg
         id="svgPedigree"
         height="100%"
         width="100%"
         class="pedigree-view__svg"
       ></svg>
-      <div id="pedigree" class="pedigree-view__content">
+      <div
+        v-show="Object.keys(tree).length"
+        id="pedigree"
+        class="pedigree-view__content"
+      >
         <div id="pedigree-container" class="pedigree-view__container">
           <PersonTree v-model="tree" @nodeClick="logClick"></PersonTree>
         </div>
       </div>
+      <Spinner v-if="!Object.keys(tree).length" />
     </section>
     <ActionModal
       id="action-modal"
@@ -55,18 +74,21 @@ import * as d3 from 'd3'
 import ActionModal from '@/components/ActionModal/ActionModal'
 import PersonTree from '@/components/PersonTree/PersonTree'
 import FloatButton from '@/components/FloatButton/FloatButton'
+import Spinner from '@/components/Spinner/Spinner'
 
 export default {
   components: {
     ActionModal,
     PersonTree,
-    FloatButton
+    FloatButton,
+    Spinner
   },
   data: () => {
     return {
       dataPerson: {},
       tree: {},
-      selectedNode: {}
+      selectedNode: {},
+      headerState: 'expand'
     }
   },
   computed: {
@@ -81,6 +103,9 @@ export default {
         .zoom()
         .scaleExtent([0.05, 2])
         .on('zoom', this.zoomed)
+    },
+    isHeaderExpanded() {
+      return this.headerState === 'expand'
     }
   },
   mounted() {
@@ -105,7 +130,8 @@ export default {
   methods: {
     ...mapActions({
       getTreeData: 'getTreeData',
-      getPersonData: 'getPersonData'
+      getPersonData: 'getPersonData',
+      toggleHeader: 'toggleHeader'
     }),
     reset() {
       this.pedigree
@@ -118,6 +144,15 @@ export default {
             .zoomTransform(this.pedigree.node())
             .invert([screen.width / 2, screen.width / 2])
         )
+    },
+    expand() {
+      if (this.isHeaderExpanded) {
+        this.toggleHeader('collapse')
+        this.headerState = 'collapse'
+      } else {
+        this.toggleHeader('expand')
+        this.headerState = 'expand'
+      }
     },
     clicked(x, y) {
       d3.event.stopPropagation()

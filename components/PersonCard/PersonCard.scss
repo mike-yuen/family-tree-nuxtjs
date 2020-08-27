@@ -11,7 +11,7 @@
     z-index: 1;
     border-radius: 50%;
     border: 1px solid #ffffff;
-    background: #2e2c25;
+    background: #515154;
   }
   &--has-spouse {
     .person-card {
@@ -53,10 +53,10 @@
     display: block;
     margin: 0 0 0 -1px;
     width: 0;
-    border-left: 1px solid #2e2c25;
+    border-left: 1px solid #515154;
     z-index: 1;
     height: 20px;
-    border-top: 1px solid #2e2c25;
+    border-top: 1px solid #515154;
   }
   &:after {
     content: none;
@@ -199,7 +199,7 @@
     left: 0;
     width: calc(50% + 55px);
     height: 0;
-    border-top: 1px solid #2e2c25;
+    border-top: 1px solid #515154;
   }
   &:first-child {
     &::before {
