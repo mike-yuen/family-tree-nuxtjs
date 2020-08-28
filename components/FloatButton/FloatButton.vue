@@ -1,6 +1,6 @@
 <template>
   <a
-    class="float-button"
+    class="float-button px-3 py-2 rounded"
     href="https://github.com/minhnguyen1505"
     target="_blank"
   >
@@ -27,11 +27,9 @@ export default {
   bottom: 40px;
   right: 30px;
   z-index: 2;
-  padding: 12px 20px;
   font-size: 16px;
-  background-color: #077f92;
+  background-color: rgb(0, 82, 204);
   color: #fff;
-  border-radius: 50px;
   font-weight: 600;
   i {
     font-size: 20px;

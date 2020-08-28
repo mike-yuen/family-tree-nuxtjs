@@ -2,8 +2,15 @@ export const state = () => ({
   user: {},
   countries: {},
   treeData: {},
-  currentPersonData: {}
+  currentPersonData: {},
+  headerState: 'expand' // collapse
 })
+
+export const getters = {
+  getHeaderState(state) {
+    return state.headerState
+  }
+}
 
 export const mutations = {
   setUser(state, newValue) {
@@ -17,6 +24,9 @@ export const mutations = {
   },
   setCurrentPersonData(state, newValue) {
     state.currentPersonData = newValue
+  },
+  setHeaderState(state, newValue) {
+    state.headerState = newValue
   }
 }
 
@@ -104,5 +114,8 @@ export const actions = {
       .catch((err) => {
         return err
       })
+  },
+  toggleHeader({ commit }, headerState) {
+    commit('setHeaderState', headerState)
   }
 }

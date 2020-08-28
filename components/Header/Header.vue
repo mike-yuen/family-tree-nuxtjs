@@ -1,19 +1,26 @@
 <template>
-  <header id="header" class="header">
+  <header
+    id="header"
+    class="header"
+    :class="{ header__collapse: !isHeaderExpanded }"
+  >
     <b-navbar toggleable="lg" variant="faded" type="light">
-      <b-navbar-brand href="/">
-        <img class="header__logo" src="@/assets/images/logo.png" />
+      <b-navbar-brand href="/" class="header__logo">
+        <div class="header__logo-image">
+          <img src="@/assets/svg/logo.svg" />
+        </div>
+        <span>DemoSoftware</span>
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item active> <i class="fa fa-home"></i> Home </b-nav-item>
-          <b-nav-item> <i class="fa fa-scroll-old"></i> History </b-nav-item>
-          <b-nav-item> <i class="fa fa-indent"></i> Indexing </b-nav-item>
-          <b-nav-item> <i class="fa fa-search"></i> Search </b-nav-item>
+          <b-nav-item active> Your home </b-nav-item>
+          <b-nav-item> Histories </b-nav-item>
+          <b-nav-item> Indexing </b-nav-item>
+          <b-nav-item> Search </b-nav-item>
         </b-navbar-nav>
         <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
+        <b-navbar-nav class="ml-auto d-flex align-items-center">
           <b-btn pill size="sm" variant="link" class="mr-2">
             <i class="fa fa-question"></i>
           </b-btn>
@@ -33,7 +40,7 @@
             </div>
           </div>
           <router-link v-else to="/login">
-            <b-btn pill variant="info" class="px-4 mr-2">
+            <b-btn size="sm" variant="primary" class="px-3 mr-2 rounded">
               <i class="fa fa-sign-in mr-2"></i> Login
             </b-btn>
           </router-link>
@@ -44,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Header',
@@ -65,6 +72,14 @@ export default {
     this.$nextTick(() => {
       this.getUser()
     })
+  },
+  computed: {
+    ...mapGetters({
+      getHeaderState: 'getHeaderState'
+    }),
+    isHeaderExpanded() {
+      return this.getHeaderState === 'expand'
+    }
   },
   methods: {
     ...mapActions({
@@ -89,10 +104,92 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  height: 58px;
   z-index: 3;
   background-color: #fff;
+  transition: 0.5s ease;
+  &__collapse {
+    top: -58px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 4px;
+    background: linear-gradient(
+      180deg,
+      rgba(9, 30, 66, 0.13) 0,
+      rgba(9, 30, 66, 0.13) 1px,
+      rgba(9, 30, 66, 0.08) 1px,
+      rgba(9, 30, 66, 0) 4px
+    );
+  }
+  /deep/ .navbar-brand {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+  }
+  /deep/ .navbar-collapse {
+    height: 100%;
+    .navbar-nav {
+      height: 100%;
+      .nav-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        border-radius: 3px;
+        &:not(:last-child) {
+          margin-right: 5px;
+        }
+        &:hover {
+          .nav-link {
+            color: rgb(0, 82, 204);
+            background-color: rgba(222, 235, 255, 0.9);
+          }
+        }
+        .nav-link {
+          color: rgb(52, 69, 99);
+          font-size: 14px;
+          line-height: 14px;
+          font-weight: 500;
+          padding: 0.55rem 0.85rem;
+          &.active {
+            &::after {
+              position: absolute;
+              bottom: 0px;
+              left: 4px;
+              right: 4px;
+              content: '';
+              height: 3px;
+              background-color: rgb(0, 82, 204);
+              border-top-left-radius: 1px;
+              border-top-right-radius: 1px;
+            }
+          }
+        }
+      }
+    }
+  }
   &__logo {
-    height: 45px;
+    span {
+      font-size: 18px;
+      font-weight: 500;
+      color: #253858;
+      padding-bottom: 1px;
+    }
+  }
+  &__logo-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(222, 235, 255, 0.9);
+    margin-right: 5px;
   }
   .email {
     div {
@@ -102,6 +199,10 @@ export default {
       font-size: 11px;
       color: #969696;
     }
+  }
+  /deep/ .navbar {
+    padding: 0 1rem;
+    height: 100%;
   }
 }
 </style>
