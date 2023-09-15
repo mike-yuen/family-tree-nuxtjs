@@ -1,6 +1,6 @@
-# nuxt-travel
+# family-tree-nuxt
 
-> My legendary Nuxt.js project
+> The Family Tree project powered by Nuxt.js
 
 ## Build Setup
 
