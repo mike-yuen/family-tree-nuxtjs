@@ -3,13 +3,13 @@ export const state = () => ({
   countries: {},
   treeData: {},
   currentPersonData: {},
-  headerState: 'expand' // collapse
+  headerState: 'expand', // collapse
 })
 
 export const getters = {
   getHeaderState(state) {
     return state.headerState
-  }
+  },
 }
 
 export const mutations = {
@@ -27,12 +27,12 @@ export const mutations = {
   },
   setHeaderState(state, newValue) {
     state.headerState = newValue
-  }
+  },
 }
 
 export const actions = {
   login({ commit }, payload) {
-    return this.$fTAxios
+    return $fetch
       .post('/api/User/login', payload)
       .then((data) => {
         commit('setCountries', data)
@@ -43,7 +43,7 @@ export const actions = {
       })
   },
   getCountries({ commit }) {
-    return this.$fTAxios
+    return $fetch
       .get('/api/configuration/countries')
       .then((data) => {
         commit('setCountries', data)
@@ -54,7 +54,7 @@ export const actions = {
       })
   },
   getTreeData({ commit }) {
-    return this.$fTAxios
+    return $fetch
       .get('/api/individual/familytree')
       .then((data) => {
         commit('setTreeData', data)
@@ -65,7 +65,7 @@ export const actions = {
       })
   },
   getPersonData({ commit }, id) {
-    return this.$fTAxios
+    return $fetch
       .get(`/api/individual/${id}`)
       .then((data) => {
         commit('setCurrentPersonData', data)
@@ -76,7 +76,7 @@ export const actions = {
       })
   },
   addPersonData({ commit }, personData) {
-    return this.$fTAxios
+    return $fetch
       .post('/api/individual', personData)
       .then((data) => {
         return data
@@ -86,7 +86,7 @@ export const actions = {
       })
   },
   editPersonData({ commit }, personData) {
-    return this.$fTAxios
+    return $fetch
       .put('/api/individual', personData)
       .then((data) => {
         return data
@@ -96,7 +96,7 @@ export const actions = {
       })
   },
   deletePersonData({ commit }, id) {
-    return this.$fTAxios
+    return $fetch
       .delete(`/api/individual/${id}`)
       .then((data) => {
         return data
@@ -106,7 +106,7 @@ export const actions = {
       })
   },
   getCurrentUser({ commit }) {
-    return this.$fTAxios
+    return $fetch
       .get(`/api/User/current-user`)
       .then((data) => {
         return data
@@ -117,5 +117,5 @@ export const actions = {
   },
   toggleHeader({ commit }, headerState) {
     commit('setHeaderState', headerState)
-  }
+  },
 }
