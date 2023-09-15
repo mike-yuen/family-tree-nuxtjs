@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  css: ['@/assets/scss/global.scss'],
   runtimeConfig: {
     public: {
       apiUrl: process.env.VUE_APP_BASE_API_URL!,
@@ -10,10 +11,6 @@ export default defineNuxtConfig({
   //  ** Customize the progress-bar color
   //  */
   // loading: { color: '#fff' },
-  // /*
-  //  ** Global CSS
-  //  */
-  // css: ['~assets/css/main.scss'],
   // plugins: [
   //   { src: '~/plugins/vee-validation.js', ssr: false },
   //   { src: '~/plugins/datepicker', ssr: false },
