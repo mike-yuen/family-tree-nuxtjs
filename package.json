@@ -5,15 +5,16 @@
   "author": "mike-yuen",
   "private": true,
   "scripts": {
-    "dev": "npm run lint && nuxt",
+    "dev": "nuxt dev",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
     "lint": "eslint --ext .js,.vue --fix --ignore-path .gitignore .",
     "test": "jest"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.13.6",
+    "@nuxt/devtools": "^0.8.3",
     "@nuxtjs/dotenv": "^1.4.1",
     "bootstrap-vue": "^2.23.1",
     "d3": "^7.8.5",
@@ -36,6 +37,7 @@
     "node-sass": "^9.0.0",
     "prettier": "^2.8.8",
     "sass-loader": "^13.3.2",
+    "typescript": "^5.2.2",
     "vue-jest": "^4.0.0-0"
   }
 }
